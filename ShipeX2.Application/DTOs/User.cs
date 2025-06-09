@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace ShipeX2.Application.DTOs
         public string Username { get; set; }
         public string PasswordHash { get; set; }
         public string Role { get; set; }
+        public long UserId { get; set; }
     }
 
 }

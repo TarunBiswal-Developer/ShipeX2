@@ -34,7 +34,16 @@
     <link href="~/assets/css/style.css" rel="stylesheet">
     <link href="~/css/datatables.datatables.css" rel="stylesheet" />
     <link href="~/css/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/css/parsley.css" rel="stylesheet" />
+    <link href="~/css/toastr.min.css" rel="stylesheet" />
+
      @await RenderSectionAsync("css", required: true)
+    <style>
+        .toast-top-right {
+            top: 70px !important;
+        }
+</style>
+
 </head>
 
 <body>
@@ -269,6 +278,9 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/js/datatables.js"></script>
     <script src="~/js/sweetalert2.all.min.js"></script>
+    <script src="~/js/parsley.min.js"></script>
+    <script src="~/js/toastr.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 

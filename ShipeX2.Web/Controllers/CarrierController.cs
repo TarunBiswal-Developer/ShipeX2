@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using ShipeX2.Application.DTOs;
 using ShipeX2.Application.Interfaces;
+using ShipeX2.Application.Wrappers;
 
 namespace ShipeX2.Web.Controllers
 {
@@ -35,19 +37,17 @@ namespace ShipeX2.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateCarrierApi()
-        {
-            try
-            {
+        public IActionResult CreateCarrierApi () => View();
 
-            }
-            catch (Exception ex)
-            {
-               _logger.LogError("Error in Carrier Controller (CreateCarrierApi):" + ex.Message);
-                throw;
-            }
-            return View();
+        [HttpPost]
+        public async Task<IActionResult> CreateCarrierApi ( [FromBody] ModelShipCarrier model )
+        {
+            var result = await _carrerServices.CreateCarrierAsync(model);
+            return Json(result);
         }
+
+
+
 
 
         #endregion

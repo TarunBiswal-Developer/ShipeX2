@@ -29,7 +29,8 @@ namespace ShipeX2.Identity.Services
             return new User
             {
                 Username = loginCred.UserId,
-                Role = role
+                Role = role,
+                UserId = loginCred.Id
             };
         }
 
@@ -45,7 +46,8 @@ namespace ShipeX2.Identity.Services
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Result.Username),
-                new Claim(ClaimTypes.Role, user.Result.Role)
+                new Claim(ClaimTypes.Role, user.Result.Role),
+                new Claim(ClaimTypes.NameIdentifier, user.Result.UserId.ToString())
             };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

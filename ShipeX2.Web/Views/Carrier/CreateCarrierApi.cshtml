@@ -1,85 +1,123 @@
 ﻿@model ShipeX2.Application.DTOs.ModelShipCarrier
 
 @{
-    ViewData["Title"] = "Create CarrierApi";
+    ViewData["Title"] = "Create Carrier";
 }
 
 @section css{
-
+    <style>
+        .form-label {
+            font-weight: bolder;
+        }
+    </style>
 }
 
-
-
-
 <div class="pagetitle">
-    <h1> Carrier API</h1>
+    <h1>Carrier API</h1>
     <nav>
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-            <li class="breadcrumb-item active"> Carrier API</li>
+            <li class="breadcrumb-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Carrier API</li>
             <li class="breadcrumb-item active">Create</li>
         </ol>
     </nav>
 </div>
 
-
 <section class="section">
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-12">
             <div class="card">
                 <div class="card-body form-inner">
-                    <form asp-action="CreateCarrierApi">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="col-md-12">
-                            <h4>New  Carrier API</h4>
-                            <hr />
+                    <form id="carrierForm" data-parsley-validate>
+                        <div class="row">
+                            <div class="col-12">
+                                <h4>New Carrier API</h4>
+                                <hr />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="CarrierName" class="form-label">Carrier Name</label>
+                                <input type="text" id="CarrierName" name="CarrierName" class="form-control"
+                                       required data-parsley-required-message="Carrier Name is required." />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="DefaultAccountNo" class="form-label">Default Account No</label>
+                                <input type="text" id="DefaultAccountNo" name="DefaultAccountNo" class="form-control"
+                                       required data-parsley-type="digits"
+                                       data-parsley-required-message="Default Account No is required."
+                                       data-parsley-type-message="Only digits are allowed." />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="ApiKey1" class="form-label">API Key 1</label>
+                                <input type="text" id="ApiKey1" name="ApiKey1" class="form-control"
+                                       required data-parsley-required-message="API Key 1 is required." />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="ApiKey2" class="form-label">API Key 2</label>
+                                <input type="text" id="ApiKey2" name="ApiKey2" class="form-control" />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="ApiKey3" class="form-label">API Key 3</label>
+                                <input type="text" id="ApiKey3" name="ApiKey3" class="form-control" />
+                            </div>
                         </div>
-                        <div class="col-md-12">                            
-                            <label asp-for="CarrierName" class="control-label"></label>
-                            <input asp-for="CarrierName" class="form-control" />
-                            <span asp-validation-for="CarrierName" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-12">
-                            <label asp-for="DefaultAccountNo" class="control-label"></label>
-                            <input asp-for="DefaultAccountNo" class="form-control" />
-                            <span asp-validation-for="DefaultAccountNo" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-12">
-                            <label asp-for="ApiKey1" class="control-label"></label>
-                            <input asp-for="ApiKey1" class="form-control" />
-                            <span asp-validation-for="ApiKey1" class="text-danger"></span>
-                        </div>
-                        <div class="col-12">
-                            <label asp-for="ApiKey2" class="control-label"></label>
-                            <input asp-for="ApiKey2" class="form-control" />
-                            <span asp-validation-for="ApiKey2" class="text-danger"></span>
-                        </div>
-                        <div class="col-12">
-                            <label asp-for="ApiKey3" class="control-label"></label>
-                            <input asp-for="ApiKey3" class="form-control" />
-                            <span asp-validation-for="ApiKey3" class="text-danger"></span>
-                        </div>
-                    
-                        <div class="col-lg-12">
-                            <div class="text-center" style="padding-top:20px;">
-                                <button type="submit" class="btn btn-primary custom-btn">Submit</button>    
+
+                        <div class="row">
+                            <div class="col-12 text-center mt-3">
+                                <button type="submit" class="btn btn-primary custom-btn me-2">Submit</button>
                                 <a asp-action="CarrierApiList" class="btn btn-secondary">Back to List</a>
                             </div>
                         </div>
                     </form>
+
+                    <div id="responseMessage" class="mt-3 text-center"></div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-
-
-
-
-
 @section Scripts {
-    
-}
+    <script>
+         $(document).ready(function () {
+            $('#carrierForm').on('submit', function (e) {
+                e.preventDefault();
+                var form = $(this);
+                if (form.parsley().isValid()) {
+                    let model = {
+                        CarrierName: $('#CarrierName').val(),
+                        DefaultAccountNo: $('#DefaultAccountNo').val(),
+                        ApiKey1: $('#ApiKey1').val(),
+                        ApiKey2: $('#ApiKey2').val(),
+                        ApiKey3: $('#ApiKey3').val()
+                    };
 
-            
+                    $.ajax({
+                        url: '@Url.Action("CreateCarrierApi", "Carrier")',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(model),
+                        success: function (response) {
+                            if (response.IsSuccessful) {
+                                toastr.success(response.Message);
+                                form[0].reset();
+                                form.parsley().reset();
+                            } else {
+                                toastr.error(response.Message);
+                            }
+                        },
+                        error: function () {
+                             toastr.error("Server error occurred!");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
