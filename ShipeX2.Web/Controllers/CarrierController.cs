@@ -23,16 +23,7 @@ namespace ShipeX2.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> CarrierApiList ()
         {
-            List<ModelShipCarrier> model = new List<ModelShipCarrier>();    
-            try
-            {
-                model = await _carrerServices.GetCarriersAsync();
-            }
-            catch (Exception ex)
-            {
-                 _logger.LogError("Error in Carrier Controller (CarrierApiList):" + ex.Message);
-                throw;
-            }
+            var model = await _carrerServices.GetCarriersAsync();
             return View(model);
         }
 
