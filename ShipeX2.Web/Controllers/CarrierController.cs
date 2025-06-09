@@ -39,8 +39,6 @@ namespace ShipeX2.Web.Controllers
         public async Task<IActionResult> EditCarrierApi(long id)
         {
             var model = await _carrerServices.GetCarrierByIdAsync(id);
-            
-
             return View(model);
         }
 
@@ -50,10 +48,6 @@ namespace ShipeX2.Web.Controllers
             var result = await _carrerServices.UpdateCarrierAsync(model);
             return Json(result);
         }
-
-
-
-
 
         [HttpPost]
         public async Task<IActionResult> ModeChange ( long id )
