@@ -10,5 +10,8 @@ namespace ShipeX2.Application.Interfaces
         Task<ModelShipCarrier> GetCarrierByIdAsync(long id);
         Task<ApiResult> UpdateCarrierAsync(ModelShipCarrier model);
 
+        Task<ApiResult> CreateCarrierAsync(ModelShipCarrier model);
+        Task<ApiResult> ToggleModeAsync(long id);
+        Task<ApiResult> ToggleCarrierStatusAsync(long carrierId);
     }
 }

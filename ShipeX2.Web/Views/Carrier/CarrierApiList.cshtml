@@ -5,9 +5,9 @@
     ViewData ["Title"] = "Carrier API";
 }
 
-@section css{
+@section css {
     <style>
-    
+
     </style>
 }
 <div class="pagetitle">
@@ -24,7 +24,7 @@
     <div class="card recent-sales overflow-auto">
 
         <div class="filter" style="padding-right:30px;">
-            <a asp-action="CreateCarrierApi" class="btn btn-primary custom-btn">Create New</a>           
+            <a asp-action="CreateCarrierApi" class="btn btn-primary custom-btn">Create New</a>
         </div>
 
         <div class="card-body">
@@ -64,26 +64,22 @@
                                         <a asp-action="EditCarrierApi" class="edit-btn" asp-route-id="@item.CarrierId">Edit</a> |
                                         @if (item.Status == true)
                                         {
-                                            <a asp-action="Delete" class="deactive-btn" asp-route-id="@item.CarrierId"
-                                                onclick="return confirm('Are you sure disable this carrier?');">Inactive</a>
+                                            <a href="#" class="deactive-btn status-change-btn" data-id="@item.CarrierId">Inactive</a>
                                         }
                                         else
                                         {
-                                            <a asp-action="Delete" class="active-btn" asp-route-id="@item.CarrierId"
-                                                onclick="return confirm('Are you sure enable this carrier?');">Active</a>
+                                            <a href="#" class="active-btn status-change-btn" data-id="@item.CarrierId">Active</a>
                                         }
- |
+                                        |
                                         @if (item.Mode == true)
                                         {
-                                            <a asp-action="ModeChange" class="deactive-btn" asp-route-id="@item.CarrierId"
-                                                onclick="return confirm('Do you really want to change the Status?');">Test</a>
+                                            <a asp-action="ModeChange" class="deactive-btn mode-change-btn" data-id="@item.CarrierId" data-mode="true">Test</a>
                                         }
                                         else
                                         {
-                                            <a asp-action="ModeChange" class="deactive-btn" asp-route-id="@item.CarrierId"
-                                                onclick="return confirm('Do you really want to change the Status?');">Live</a>
+                                            <a asp-action="ModeChange" class="deactive-btn mode-change-btn" data-id="@item.CarrierId" data-mode="false">Live</a>
                                         }
- 
+
                                     </span>
                                 </td>
                             </tr>
@@ -102,11 +98,82 @@
 </section>
 
 @section Scripts {
-<script>
-    $(document).ready(function () {
-       $('#carrierlist').DataTable();
+    <script>
+         $(document).ready(function () {
+             $('#carrierlist').DataTable();
+             $('.mode-change-btn').on('click', function (e) {
+                e.preventDefault();
+                var carrierId = $(this).data('id');
+                var currentMode = $(this).data('mode');
+                var newModeText = currentMode ? "Live" : "Test";
+                Swal.fire({
+                    title: 'Are you sure?',
+                    html: `Do you really want to change the status to <b>${newModeText}</b> mode?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#28a745',
+                    cancelButtonColor: '#dc3545',
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '@Url.Action("ModeChange", "Carrier")',
+                            type: 'POST',
+                            data: { id: carrierId },
+                            success: function (response) {
+                                    if (response.IsSuccessful) {
+                                    toastr.success(response.Message, 'Success');
+                                    setTimeout(() => location.reload(), 1500);
+                                } else {
+                                    toastr.error(response.Message, 'Error');
+                                }
+                            },
+                            error: function () {
+                                toastr.error('Server error occurred!', 'Error');
+                            }
+                        });
+                    }
+                });
+
+              });
+
+          $(document).on('click', '.status-change-btn', function (e) {
+                e.preventDefault();
+                var carrierId = $(this).data('id');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Do you want to toggle the carrier's status?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '@Url.Action("ToggleStatus", "Carrier")',
+                            type: 'POST',
+                            data: { id: carrierId },
+                            success: function (response) {
+                                    if (response.IsSuccessful) {
+                                    toastr.success(response.Message, 'Success');
+                                    setTimeout(() => location.reload(), 1500);
+                                } else {
+                                    toastr.error(response.Message, 'Error');
+                                }
+                            },
+                            error: function () {
+                               toastr.error('Server error occurred!', 'Error');
+                            }
+                        });
+                    }
+                });
+            });
     });
-</script>
+    </script>
 }
 
 
