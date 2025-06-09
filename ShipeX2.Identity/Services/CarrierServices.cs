@@ -96,5 +96,75 @@ namespace ShipeX2.Identity.Services
             return result;
         }
 
+        public async Task<ApiResult> ToggleModeAsync ( long id )
+        {
+            ApiResult apiResult = new ApiResult();
+            try
+            {
+                var carrier = await _context.ShipCarriers.FindAsync(id);
+                if (carrier == null)
+                {
+                    return new ApiResult { IsSuccessful = false, Message = "Carrier not found." };
+                }
+                carrier.Mode = !carrier.Mode;
+                int i =  await _context.SaveChangesAsync();
+                if (i > 0)
+                {
+                    apiResult.IsSuccessful = true;
+                    apiResult.Message = "Mode changed successfully";
+                }
+                else
+                {
+                    apiResult.IsSuccessful = false;
+                    apiResult.Message = "Failed to update mode.";
+                }
+            }
+            catch (Exception ex)
+            {
+                apiResult.Message = $"Error updating mode: {ex.Message}";
+                apiResult.IsSuccessful = false;
+                _logger.LogError("Error in CarrierServices (ToggleModeAsync): " + ex.Message);
+            }
+            return apiResult;
+        }
+
+        public async Task<ApiResult> ToggleCarrierStatusAsync ( long carrierId )
+        {
+            ApiResult apiResult = new ApiResult();
+            try
+            {
+                var carrier = await _context.ShipCarriers.FindAsync(carrierId);
+                if (carrier == null)
+                {
+                    apiResult.IsSuccessful = false;
+                    apiResult.Message = "Carrier not found.";
+                    apiResult.Data = Array.Empty<string>();
+                    return apiResult;
+                }
+                carrier.Status = !carrier.Status;
+                int i = await _context.SaveChangesAsync();
+                if (i > 0)
+                {
+                    apiResult.IsSuccessful = true;
+                    apiResult.Message = "Carrier status updated successfully.";
+                    apiResult.Data = Array.Empty<string>();
+                }
+                else
+                {
+                    apiResult.IsSuccessful = false;
+                    apiResult.Message = "Failed to update carrier status.";
+                    apiResult.Data = Array.Empty<string>();
+                }
+            }
+            catch (Exception ex)
+            {
+                apiResult.IsSuccessful = false;
+                apiResult.Message = "An error occurred while updating the carrier status.";
+                _logger.LogError("Error in CarrierServices (ToggleCarrierStatusAsync): " + ex.Message);
+                throw;
+            }
+            return apiResult;
+        }
+
     }
 }

@@ -7,7 +7,7 @@ using ShipeX2.Application.Wrappers;
 
 namespace ShipeX2.Web.Controllers
 {
-    [Authorize(Roles ="Super Admin,Admin")]
+    [Authorize(Roles = "Super Admin,Admin")]
     public class CarrierController : Controller
     {
         private readonly ILogger<CarrierController> _logger;
@@ -37,9 +37,19 @@ namespace ShipeX2.Web.Controllers
             return Json(result);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ModeChange ( long id )
+        {
+            var result = await _carrerServices.ToggleModeAsync(id);
+            return Json(result);
+        }
 
-
-
+        [HttpPost]
+        public async Task<IActionResult> ToggleStatus ( long id )
+        {
+            var result = await _carrerServices.ToggleCarrierStatusAsync(id);
+            return Json(result);
+        }
 
         #endregion
     }
