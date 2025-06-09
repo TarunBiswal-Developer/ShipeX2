@@ -21,11 +21,10 @@ namespace ShipeX2.Identity.Services
 
         private async Task<User> GetUser ( string username, string password )
         {
-            var loginCred = _context.LoginCredentials.FirstOrDefault(u => u.UserId == username);
+            string isPasswordValid = await AesOperatonHelper.Encrypt(password);
+            var loginCred = _context.LoginCredentials.FirstOrDefault(u => u.UserId == username && u.Password == isPasswordValid);
             if (loginCred == null)
                 return null;
-
-            string isPasswordValid = await AesOperatonHelper.Encrypt(password);
             if (string.IsNullOrEmpty(isPasswordValid))
                 return null;
 
@@ -41,8 +40,7 @@ namespace ShipeX2.Identity.Services
         public async Task<(bool IsSuccess, string ErrorMessage, ClaimsPrincipal Principal)> AuthenticateUserAsync ( string username, string password )
         {
             var user = GetUser(username,password);
-
-            if (user.IsCanceled)
+            if (user.Result == null)
             {
                 return (false, "Invalid username or password", null);
             }

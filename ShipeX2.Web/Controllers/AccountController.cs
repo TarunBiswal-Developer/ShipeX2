@@ -22,9 +22,11 @@ namespace ShipeX2.Web.Controllers
             {
                 var role = User.FindFirst(ClaimTypes.Role)?.Value;
                 var name = User.FindFirst(ClaimTypes.Name)?.Value;
+                var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var redirectRoute = _authService.GetRedirectRouteByRole(role);
                 HttpContext.Session.SetString("UserRole", role);
                 HttpContext.Session.SetString("UserName", name);
+                HttpContext.Session.SetString("UserId", userid);
                 return RedirectToAction(redirectRoute.Action, redirectRoute.Controller);
             }
             return View();
@@ -66,8 +68,10 @@ namespace ShipeX2.Web.Controllers
                 // Set session values
                 var role = result.Principal.FindFirst(ClaimTypes.Role)?.Value;
                 var name = result.Principal.FindFirst(ClaimTypes.Name)?.Value;
+                var userid = result.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 HttpContext.Session.SetString("UserRole", role);
                 HttpContext.Session.SetString("UserName", name);
+                HttpContext.Session.SetString("UserId", userid);
 
                 var redirectRoute = _authService.GetRedirectRouteByRole(role);
                 return RedirectToAction(redirectRoute.Action, redirectRoute.Controller);
