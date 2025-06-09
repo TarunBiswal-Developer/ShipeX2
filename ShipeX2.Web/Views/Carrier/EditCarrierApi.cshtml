@@ -1,0 +1,128 @@
+﻿@model ShipeX2.Application.DTOs.ModelShipCarrier
+
+@{
+    ViewData["Title"] = "Edit Carrier";
+}
+
+@section css {
+    <style>
+        .form-label {
+            font-weight: bolder;
+        }
+    </style>
+}
+
+<div class="pagetitle">
+    <h1>Edit Carrier API</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-action="CarrierApiList">Carrier API</a></li>
+            <li class="breadcrumb-item active">Edit</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body form-inner">
+                    <form id="carrierForm" data-parsley-validate>
+                        <input type="hidden" id="CarrierId" name="CarrierId" value="@Model.CarrierId" />
+
+                        <div class="row">
+                            <div class="col-12">
+                                <h4>Edit Carrier API</h4>
+                                <hr />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="CarrierName" class="form-label">Carrier Name</label>
+                                <input type="text" id="CarrierName" name="CarrierName" class="form-control"
+                                       required value="@Model.CarrierName"
+                                       data-parsley-required-message="Carrier Name is required." />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="DefaultAccountNo" class="form-label">Default Account No</label>
+                                <input type="text" id="DefaultAccountNo" name="DefaultAccountNo" class="form-control"
+                                       required value="@Model.DefaultAccountNo"
+                                       data-parsley-type="digits"
+                                       data-parsley-required-message="Default Account No is required."
+                                       data-parsley-type-message="Only digits are allowed." />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="ApiKey1" class="form-label">API Key 1</label>
+                                <input type="text" id="ApiKey1" name="ApiKey1" class="form-control"
+                                       required value="@Model.ApiKey1"
+                                       data-parsley-required-message="API Key 1 is required." />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="ApiKey2" class="form-label">API Key 2</label>
+                                <input type="text" id="ApiKey2" name="ApiKey2" class="form-control" value="@Model.ApiKey2" />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="ApiKey3" class="form-label">API Key 3</label>
+                                <input type="text" id="ApiKey3" name="ApiKey3" class="form-control" value="@Model.ApiKey3" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 text-center mt-3">
+                                <button type="submit" class="btn btn-primary custom-btn me-2">Update</button>
+                                <a asp-action="CarrierApiList" class="btn btn-secondary">Back to List</a>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div id="responseMessage" class="mt-3 text-center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#carrierForm').on('submit', function (e) {
+                e.preventDefault();
+                var form = $(this);
+                if (form.parsley().isValid()) {
+                    let model = {
+                        CarrierId: $('#CarrierId').val(),
+                        CarrierName: $('#CarrierName').val(),
+                        DefaultAccountNo: $('#DefaultAccountNo').val(),
+                        ApiKey1: $('#ApiKey1').val(),
+                        ApiKey2: $('#ApiKey2').val(),
+                        ApiKey3: $('#ApiKey3').val()
+                    };
+
+                    $.ajax({
+                        url: '@Url.Action("EditCarrierApi", "Carrier")',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(model),
+                        success: function (response) {
+                            if (response.IsSuccessful) {
+                                toastr.success(response.Message);
+                                setTimeout(() => {
+                                    window.location.href = '@Url.Action("CarrierApiList", "Carrier")';
+                                }, 1500);
+                            } else {
+                                toastr.error(response.Message);
+                            }
+                        },
+                        error: function () {
+                            toastr.error("Server error occurred!");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

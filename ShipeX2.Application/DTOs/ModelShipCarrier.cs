@@ -29,7 +29,7 @@ namespace ShipeX2.Application.DTOs
         public long? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public long? ModifiedBy { get; set; }
-        public DateTime? ModifiedDate { get; set; }
+        public DateOnly? ModifiedDate { get; set; }
 
     }
 }

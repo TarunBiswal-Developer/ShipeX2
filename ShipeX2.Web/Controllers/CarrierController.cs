@@ -37,6 +37,24 @@ namespace ShipeX2.Web.Controllers
             return Json(result);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> EditCarrierApi(long id)
+        {
+            var model = await _carrerServices.GetCarrierByIdAsync(id);
+            
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditCarrierApi([FromBody] ModelShipCarrier model)
+        {
+            var result = await _carrerServices.UpdateCarrierAsync(model);
+            return Json(result);
+        }
+
+
+
 
 
 

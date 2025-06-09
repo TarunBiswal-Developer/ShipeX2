@@ -75,7 +75,7 @@ namespace ShipeX2.Persistence.TableModels
             public long? CreatedBy { get; set; }
             public DateTime? CreatedDate { get; set; }
             public long? ModifiedBy { get; set; }
-            public DateTime? ModifiedDate { get; set; }
+            public DateOnly? ModifiedDate { get; set; }
             public bool? Status { get; set; }
             public bool? Mode { get; set; }
         }

@@ -96,5 +96,62 @@ namespace ShipeX2.Identity.Services
             return result;
         }
 
+        public async Task<ModelShipCarrier> GetCarrierByIdAsync(long id)
+        {
+            var carrier = await _context.ShipCarriers.FindAsync(id);
+            if (carrier == null) return null;
+
+            return new ModelShipCarrier
+            {
+                CarrierId = (int)carrier.CarrierId,
+                CarrierName = carrier.CarrierName,
+                DefaultAccountNo = carrier.DefaultAccountNo,
+                ApiKey1 = carrier.ApiKey1,
+                ApiKey2 = carrier.ApiKey2,
+                ApiKey3 = carrier.ApiKey3,
+                Status = carrier.Status,
+                Mode = carrier.Mode
+            };
+        }
+
+        public async Task<ApiResult> UpdateCarrierAsync(ModelShipCarrier model)
+        {
+            var result = new ApiResult();
+            try
+            {
+                var carrier = await _context.ShipCarriers.FindAsync((long)(model.CarrierId));
+                if (carrier == null)
+                {
+                    result.IsSuccessful = false;
+                    result.Message = "Carrier not found.";
+                    return result;
+                }
+
+                carrier.CarrierName = model.CarrierName;
+                carrier.DefaultAccountNo = model.DefaultAccountNo;
+                carrier.ApiKey1 = model.ApiKey1;
+                carrier.ApiKey2 = model.ApiKey2;
+                carrier.ApiKey3 = model.ApiKey3;
+                carrier.ModifiedBy = _currentUser.GetCurrentUserId();
+                carrier.ModifiedDate = DateOnly.MaxValue;
+
+                _context.ShipCarriers.Update(carrier);
+                await _context.SaveChangesAsync();
+
+                result.IsSuccessful = true;
+                result.Message = "Carrier updated successfully.";
+                result.Data = carrier;
+            }
+            catch (Exception ex)
+            {
+               _logger.LogError("Error in UpdateCarrierAsync: " + ex.Message);
+                result.IsSuccessful = false;
+                result.Message = "Error updating carrier.";
+            }
+
+            return result;
+        }
+
+
     }
 }
