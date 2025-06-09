@@ -124,21 +124,27 @@ namespace ShipeX2.Identity.Services
                     result.Message = "Carrier not found.";
                     return result;
                 }
-
                 carrier.CarrierName = model.CarrierName;
                 carrier.DefaultAccountNo = model.DefaultAccountNo;
                 carrier.ApiKey1 = model.ApiKey1;
                 carrier.ApiKey2 = model.ApiKey2;
                 carrier.ApiKey3 = model.ApiKey3;
                 carrier.ModifiedBy = _currentUser.GetCurrentUserId();
-                carrier.ModifiedDate = DateOnly.MaxValue;
+                carrier.CreatedDate = DateTime.UtcNow; 
 
                 _context.ShipCarriers.Update(carrier);
-                await _context.SaveChangesAsync();
-
-                result.IsSuccessful = true;
-                result.Message = "Carrier updated successfully.";
-                result.Data = carrier;
+                int i =  await _context.SaveChangesAsync();
+                if (i > 0)
+                {
+                    result.IsSuccessful = true;
+                    result.Message = "Carrier updated successfully.";
+                    result.Data = Array.Empty<string>();
+                }
+                else
+                {
+                    result.IsSuccessful = false;
+                    result.Message = "Failed to update carrier.";
+                }
             }
             catch (Exception ex)
             {
