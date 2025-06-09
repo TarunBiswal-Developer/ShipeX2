@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ShipeX2.Application.Interfaces;
 using ShipeX2.Identity.Context;
 using ShipeX2.Identity.Services;
@@ -14,11 +15,14 @@ namespace ShipeX.Tests.Service
     public class AuthServiceTests
     {
         private readonly IUserAuthenticationService _authService;
+        private readonly ILogger<AuthServiceTests> _logger;
         private readonly ApplicationDbContext _context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>());
 
-        public AuthServiceTests ()
+        public AuthServiceTests ( IUserAuthenticationService userAuthenticationService,ILogger<AuthServiceTests> logger,ApplicationDbContext context  )
         {
-            _authService = new UserAuthenticationService(_context);
+            _context = context;
+            _authService = userAuthenticationService;
+            _logger = logger;
         }
 
         [Theory]
