@@ -56,6 +56,7 @@ builder.Services.AddSession();
 builder.Services.AddScoped<IDynamicDbContextFactory, DynamicDbContextFactory>();
 builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
 builder.Services.AddScoped<ICarrierListServices, CarrierServices>();
+builder.Services.AddScoped<IPrinterServices, PrinterServices>();
 builder.Services.AddScoped<CurrentUser>();
 
 

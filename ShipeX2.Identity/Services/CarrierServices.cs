@@ -30,8 +30,8 @@ namespace ShipeX2.Identity.Services
                         .Select(s => new ModelShipCarrier
                         {
                             CarrierId = (int) s.CarrierId,
-                            CarrierName = s.CarrierName,
-                            DefaultAccountNo = s.DefaultAccountNo,
+                            CarrierName = s.CarrierName ?? string.Empty,
+                            DefaultAccountNo = s.DefaultAccountNo ?? string.Empty,
                             ApiKey1 = s.ApiKey1,
                             ApiKey2 = s.ApiKey2,
                             ApiKey3 = s.ApiKey3,
@@ -102,8 +102,8 @@ namespace ShipeX2.Identity.Services
             return new ModelShipCarrier
             {
                 CarrierId = (int)carrier.CarrierId,
-                CarrierName = carrier.CarrierName,
-                DefaultAccountNo = carrier.DefaultAccountNo,
+                CarrierName = carrier.CarrierName ?? string.Empty,
+                DefaultAccountNo = carrier.DefaultAccountNo ?? string.Empty,
                 ApiKey1 = carrier.ApiKey1,
                 ApiKey2 = carrier.ApiKey2,
                 ApiKey3 = carrier.ApiKey3,
