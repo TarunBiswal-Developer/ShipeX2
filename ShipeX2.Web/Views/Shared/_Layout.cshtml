@@ -1,0 +1,277 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var userRole = HttpContextAccessor.HttpContext?.Session.GetString("UserRole");
+    var userId = HttpContextAccessor.HttpContext?.Session.GetString("UserID");
+    var userName = HttpContextAccessor.HttpContext?.Session.GetString("UserName");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>ShipX | @ViewBag.Title</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+    <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="~/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="~/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+    <!-- Template Main CSS File -->
+    <link href="~/assets/css/style.css" rel="stylesheet">
+    <link href="~/assets/css/style.css" rel="stylesheet">
+    <link href="~/css/datatables.datatables.css" rel="stylesheet" />
+    <link href="~/css/sweetalert2.min.css" rel="stylesheet" />
+     @await RenderSectionAsync("css", required: true)
+</head>
+
+<body>
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
+        <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center justify-content-between">
+                <a href="#" class="logo d-flex align-items-center">
+                    <img src="~/assets/img/logo.png" alt="">
+                    <span class="d-none d-lg-block"></span>
+                </a>
+                <i class="bi bi-list toggle-sidebar-btn"></i>
+            </div>
+            <nav id="navbar" class="navbar">
+                <ul>
+                    @if (userRole == "Admin" || userRole == "Super Admin")
+                    {
+                        <li class="dropdown">
+                            <a href="#"><span>Settings</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a asp-area="" asp-controller="Carrier" asp-action="CarrierApiList">Carrier API</a></li>
+                                <li> <a asp-area="" asp-controller="Carriersetup" asp-action="Index">Shipping Services</a></li>
+                                <li><a asp-area="" asp-controller="Client" asp-action="Index">Manage Client</a></li>
+                                @if (userRole == "Super Admin")
+                                {
+                                    <li><a asp-area="" asp-controller="Importer" asp-action="Index">Manage Importer</a></li>
+                                }
+                                <li> <a asp-area="" asp-controller="Printer" asp-action="Index">Manage Printer</a></li>
+                                <li> <a asp-area="" asp-controller="User" asp-action="Index">Manage User</a></li>
+                            </ul>
+                        </li>
+                    }
+
+                    <li class="dropdown">
+                        <a href="#"><span>Shipment</span> <i class="bi bi-chevron-down"></i></a>
+                        <ul>                          
+
+                            <li><a asp-area="" asp-controller="Shipment" asp-action="Label">Quick Ship</a></li>
+                            <li><a asp-area="" asp-controller="Shipment" asp-action="BackOrd">BackOrder</a></li>
+                            <li><a asp-area="" asp-controller="Shipment" asp-action="Manual">Manual Ship</a></li>
+                            <li><a asp-area="" asp-controller="Shipment" asp-action="ManualReturn">Return Ship</a></li>
+                        </ul>
+                    </li>                   
+
+                    <li class="dropdown">
+                        <a href="#"><span>Shipment History</span> <i class="bi bi-chevron-down"></i></a>
+                        <ul>
+                            <li> <a asp-area="" asp-controller="ShipmentHistory" asp-action="Index">Shipment History</a></li>
+                            <li><a asp-area="" asp-controller="ShipmentHistory" asp-action="ReturnHistory">Return History</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#"><span>Bulk Mailer</span> <i class="bi bi-chevron-down"></i></a>
+                        <ul>
+                            <li> <a asp-area="" asp-controller="UploadExcel" asp-action="Index">Upload</a></li>
+                            <li><a asp-area="" asp-controller="UploadExcel" asp-action="BulkmailerHistoryDetails">History</a></li>  
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#"><span>DTC</span> <i class="bi bi-chevron-down"></i></a>
+                        <ul>
+                            <li><a asp-area="" asp-controller="DTC" asp-action="Index">DTC Manual </a></li>
+                            <li><a asp-area="" asp-controller="DTC" asp-action="Dtcal">DTC Automatic </a></li>
+                            <li><a asp-area="" asp-controller="DTC" asp-action="Scd">DTC ScanDoc </a></li>                            
+                            <li><a asp-area="" asp-controller="DTC" asp-action="Hst">DTC History </a></li>
+                            <li><a asp-area="" asp-controller="DTC" asp-action="Fund">Manage Fund </a></li>
+                            
+                        </ul>
+                    </li>
+
+                    @if (userRole == "Super Admin")
+                    {
+                        <li> <a class="nav-link scrollto" asp-area="" asp-controller="Requestlog" asp-action="Index">API Request</a></li>
+                    }
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav>
+
+            <nav class="header-nav ms-auto" style="padding-left:10px">
+                <ul class="d-flex align-items-center">
+                    <li class="nav-item dropdown pe-3">
+
+                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                            <img src="~/assets/img/no-profile-picture.png" alt="Profile" class="rounded-circle" />
+                            @*  <img src="~/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">*@
+                            <span class="d-none d-md-block dropdown-toggle ps-2">
+                                @Context.Session.GetString("UserID")
+                            </span>
+                        </a><!-- End Profile Iamge Icon -->
+
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                            <li class="dropdown-header">
+
+                                <h6>@userName</h6>
+                                <span>@userRole</span>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                                    <i class="bi bi-person"></i>
+                                    <span>My Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                                    <i class="bi bi-gear"></i>
+                                    <span>Account Settings</span>
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+                                    <i class="bi bi-question-circle"></i>
+                                    <span>Need Help?</span>
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <form id="logoutForm" asp-controller="Account" asp-action="Logout" method="post" class="dropdown-item p-0">
+                                    <button type="submit" class="btn btn-link dropdown-item d-flex align-items-center">
+                                        <i class="bi bi-box-arrow-right"></i>
+                                        <span>Sign Out</span>
+                                    </button>
+                                </form>
+
+
+                            </li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+        <ul class="sidebar-nav" id="sidebar-nav">
+            <!-- End Dashboard Nav -->
+            @if (userRole == "Admin" ||userRole == "Super Admin")
+            {
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                        <span>Settings</span><i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li><a asp-area="" asp-controller="Carrier" asp-action="Index">Carrier API</a></li>
+                        <li> <a asp-area="" asp-controller="Carriersetup" asp-action="Index">Shipping Services</a></li>
+                        <li><a asp-area="" asp-controller="Client" asp-action="Index">Manage Client</a></li>
+                        @if (userRole == "Super Admin")
+                        {
+                            <li><a asp-area="" asp-controller="Importer" asp-action="Index">Importer</a></li>
+                        }
+                        <li> <a asp-area="" asp-controller="Printer" asp-action="Index">Manage Printer</a></li>
+                        <li> <a asp-area="" asp-controller="User" asp-action="Index">Manage User</a></li>
+                    </ul>
+                </li>
+
+            }
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" asp-area="" asp-controller="Shipment" asp-action="Label">Quick Ship</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" asp-area="" asp-controller="ShipmentHistory" asp-action="Index">Shipment History</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#components-nav1" data-bs-toggle="collapse" href="#">
+                    <span>Bulk Mailer</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+
+                <ul id="components-nav1" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li> <a asp-area="" asp-controller="UploadExcel" asp-action="Index">Upload Excel</a></li>
+                    <li><a asp-area="" asp-controller="UploadExcel" asp-action="BulkmailerHistory">History</a></li>
+                </ul>
+            </li>
+            @if (userRole == "Super Admin")
+            {
+                <li class="nav-item"> <a class="nav-link collapsed" asp-area="" asp-controller="Requestlog" asp-action="Index">API Request</a></li>
+            }
+
+        </ul>
+
+    </aside>
+    <!-- End Sidebar-->
+    <!-- End Sidebar-->
+    <div class="container-fluid container-xl d-flex align-items-center ">
+        <main id="main" class="main">
+            @RenderBody()
+        </main>
+    </div>
+    <!-- End #main -->
+    <!-- ======= Footer ======= -->
+    <footer id="footer" class="footer">
+        <div class="copyright">
+
+            &copy; Copyright <strong><span> <a href="https://thbred.com" target="_blank">Thoroughbred Fulfillment.</a></span></strong> All Rights Reserverd.
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="~/assets/vendor/apexcharts/apexcharts.min.js"></script>
+    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/vendor/chart.js/chart.umd.js"></script>
+    <script src="~/assets/vendor/echarts/echarts.min.js"></script>
+    <script src="~/assets/vendor/quill/quill.min.js"></script>
+    <script src="~/assets/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="~/assets/vendor/tinymce/tinymce.min.js"></script>
+    <script src="~/assets/vendor/php-email-form/validate.js"></script>
+    <script src="~/js/jquery-3.2.1.slim.min.js"></script>
+    <!-- Template Main JS File -->
+    <script src="~/assets/js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/js/datatables.js"></script>
+    <script src="~/js/sweetalert2.all.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>
+
+

@@ -1,0 +1,85 @@
+﻿@model ShipeX2.Application.DTOs.ModelShipCarrier
+
+@{
+    ViewData["Title"] = "Create CarrierApi";
+}
+
+@section css{
+
+}
+
+
+
+
+<div class="pagetitle">
+    <h1> Carrier API</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active"> Carrier API</li>
+            <li class="breadcrumb-item active">Create</li>
+        </ol>
+    </nav>
+</div>
+
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body form-inner">
+                    <form asp-action="CreateCarrierApi">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="col-md-12">
+                            <h4>New  Carrier API</h4>
+                            <hr />
+                        </div>
+                        <div class="col-md-12">                            
+                            <label asp-for="CarrierName" class="control-label"></label>
+                            <input asp-for="CarrierName" class="form-control" />
+                            <span asp-validation-for="CarrierName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-12">
+                            <label asp-for="DefaultAccountNo" class="control-label"></label>
+                            <input asp-for="DefaultAccountNo" class="form-control" />
+                            <span asp-validation-for="DefaultAccountNo" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-12">
+                            <label asp-for="ApiKey1" class="control-label"></label>
+                            <input asp-for="ApiKey1" class="form-control" />
+                            <span asp-validation-for="ApiKey1" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="ApiKey2" class="control-label"></label>
+                            <input asp-for="ApiKey2" class="form-control" />
+                            <span asp-validation-for="ApiKey2" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="ApiKey3" class="control-label"></label>
+                            <input asp-for="ApiKey3" class="form-control" />
+                            <span asp-validation-for="ApiKey3" class="text-danger"></span>
+                        </div>
+                    
+                        <div class="col-lg-12">
+                            <div class="text-center" style="padding-top:20px;">
+                                <button type="submit" class="btn btn-primary custom-btn">Submit</button>    
+                                <a asp-action="CarrierApiList" class="btn btn-secondary">Back to List</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+@section Scripts {
+    
+}
+
+            

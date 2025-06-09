@@ -1,0 +1,115 @@
+﻿@model List<ShipeX2.Application.DTOs.ModelShipCarrier>
+
+
+@{
+    ViewData ["Title"] = "Carrier API";
+}
+
+@section css{
+    <style>
+    
+    </style>
+}
+<div class="pagetitle">
+    <h1>Carrier API</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active"> Carrier API</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section dashboard">
+    <div class="card recent-sales overflow-auto">
+
+        <div class="filter" style="padding-right:30px;">
+            <a asp-action="CreateCarrierApi" class="btn btn-primary custom-btn">Create New</a>           
+        </div>
+
+        <div class="card-body">
+            <h5 class="card-title"> Carrier API</h5>
+            <table class="table table-borderless table-responsive" id="carrierlist">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            Carrier Name
+                        </th>
+                        <th scope="col">
+                            Account No.
+                        </th>
+                        <th scope="col" class="apikeys">
+                            API Keys
+                        </th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CarrierName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DefaultAccountNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ApiKey1),<br> @Html.DisplayFor(modelItem => item.ApiKey2), @Html.DisplayFor(modelItem => item.ApiKey3)
+                                </td>
+                                <td>
+                                    <span style="white-space: nowrap;">
+                                        <a asp-action="Edit" class="edit-btn" asp-route-id="@item.CarrierId">Edit</a> |
+                                        @if (item.Status == true)
+                                        {
+                                            <a asp-action="Delete" class="deactive-btn" asp-route-id="@item.CarrierId"
+                                                onclick="return confirm('Are you sure disable this carrier?');">Inactive</a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Delete" class="active-btn" asp-route-id="@item.CarrierId"
+                                                onclick="return confirm('Are you sure enable this carrier?');">Active</a>
+                                        }
+ |
+                                        @if (item.Mode == true)
+                                        {
+                                            <a asp-action="ModeChange" class="deactive-btn" asp-route-id="@item.CarrierId"
+                                                onclick="return confirm('Do you really want to change the Status?');">Test</a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="ModeChange" class="deactive-btn" asp-route-id="@item.CarrierId"
+                                                onclick="return confirm('Do you really want to change the Status?');">Live</a>
+                                        }
+ 
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">No records found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+<script>
+    $(document).ready(function () {
+       $('#carrierlist').DataTable();
+    });
+</script>
+}
+
+
+
+
+

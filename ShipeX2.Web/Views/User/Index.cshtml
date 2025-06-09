@@ -1,0 +1,47 @@
+﻿@model List<ShipeX2.Models.UserViewModel>
+@{
+    ViewData["Title"] = "User List";
+}
+@section css{
+
+}
+<div class="pagetitle">
+    <h1>Carrier API</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active"> Carrier API</li>
+        </ol>
+    </nav>
+</div>
+
+@if (Model == null)
+{
+    <div class="alert alert-warning">
+        No users found for the selected client.
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.Name</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+
+@section scripts {
+}
