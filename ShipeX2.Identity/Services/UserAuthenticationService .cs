@@ -28,7 +28,7 @@ namespace ShipeX2.Identity.Services
             if (string.IsNullOrEmpty(isPasswordValid))
                 return null;
 
-            var role = _context.UserRoles.Where(r => r.RoleId == loginCred.RoleId).Select(r => r.Role).FirstOrDefault();
+            var role = await _context.UserRoles.Where(r => r.RoleId == loginCred.RoleId).Select(r => r.Role).FirstOrDefaultAsync();
             return new User
             {
                 Username = loginCred.UserId,
