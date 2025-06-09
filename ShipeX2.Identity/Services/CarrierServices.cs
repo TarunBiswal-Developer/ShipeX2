@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ShipeX2.Application.DTOs;
 using ShipeX2.Application.Interfaces;
 using ShipeX2.Application.Wrappers;
 using ShipeX2.Identity.Context;
-using System.Security.Claims;
 using static ShipeX2.Persistence.TableModels.Tables;
 
 namespace ShipeX2.Identity.Services

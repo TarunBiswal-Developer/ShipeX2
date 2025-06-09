@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using ShipeX2.Application.DTOs;
 using ShipeX2.Application.Interfaces;
-using ShipeX2.Application.Wrappers;
 
 namespace ShipeX2.Web.Controllers
 {
