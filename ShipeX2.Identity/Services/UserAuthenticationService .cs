@@ -22,10 +22,10 @@ namespace ShipeX2.Identity.Services
         private async Task<User> GetUser ( string username, string password )
         {
             string isPasswordValid = await AesOperatonHelper.Encrypt(password);
+            if (string.IsNullOrEmpty(isPasswordValid))
+                return null;
             var loginCred = _context.LoginCredentials.FirstOrDefault(u => u.UserId == username && u.Password == isPasswordValid);
             if (loginCred == null)
-                return null;
-            if (string.IsNullOrEmpty(isPasswordValid))
                 return null;
 
             var role = await _context.UserRoles.Where(r => r.RoleId == loginCred.RoleId).Select(r => r.Role).FirstOrDefaultAsync();
