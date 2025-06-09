@@ -1,0 +1,102 @@
+﻿@model List<ShipeX2.Application.DTOs.ModelUser>
+
+@{
+    ViewData ["Title"] = "Manage User";
+}
+
+@section css {
+
+}
+
+<div class="pagetitle">
+    <h1>Manage User </h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active">Manage User</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<section class="section dashboard">
+    <div class="card recent-sales overflow-auto">
+
+        <div class="filter" style="padding-right:30px;">
+            <a asp-action="Create" class="btn btn-primary custom-btn">Create New</a>
+        </div>
+
+        <div class="card-body">
+            <h5 class="card-title">Manage User</h5>
+            <table class="table table-borderless" id="userList">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            UserId
+                        </th>
+                        <th scope="col">
+                            Role
+                        </th>
+                        <th scope="col">
+                            Name
+                        </th>
+                        <th scope="col">
+                            Status
+                        </th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Role)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                <input type="checkbox" disabled @(item.Status == false ? "" : "checked") />
+                            </td>
+                            <td>
+                                <span>
+                                    <a asp-action="Edit" class="edit-btn" asp-route-id="@item.Id">Edit</a>|
+                                    @{
+                                        string statusText = item.Status.ToString();
+                                        if (@statusText == "True")
+                                        {
+
+                                            <a asp-action="Delete" class="deactive-btn" asp-route-id="@item.Id"
+                                               onclick="return confirm('Do you really want to change the Status?');">Deactive</a>
+                                        }
+
+                                        else
+                                        {
+                                            <a asp-action="Delete" class="active-btn" asp-route-id="@item.Id"
+                                               onclick="return confirm('Do you really want to change the Status?');">Active</a>
+
+                                        }
+                                    }
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+</section>
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+       $('#userList').DataTable();
+    });
+</script>
+}

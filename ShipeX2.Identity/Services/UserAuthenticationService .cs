@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ShipeX2.Application.DTOs;
 using ShipeX2.Application.Helpers;
 using ShipeX2.Application.Interfaces;
@@ -10,9 +12,11 @@ namespace ShipeX2.Identity.Services
     public class UserAuthenticationService : IUserAuthenticationService
     {
         private readonly ApplicationDbContext _context;
-        public UserAuthenticationService ( ApplicationDbContext context )
+        private readonly ILogger<UserAuthenticationService> _logger;
+        public UserAuthenticationService ( ApplicationDbContext context, ILogger<UserAuthenticationService> logger )
         {
             _context = context;
+            _logger = logger;
         }
 
         private async Task<User> GetUser ( string username, string password )
@@ -58,10 +62,41 @@ namespace ShipeX2.Identity.Services
         public (string Controller, string Action) GetRedirectRouteByRole ( string role ) =>
         role switch
         {
-            "Admin" => ("User", "Index"),
+            "Admin" => ("User", "UserList"),
             "Shipper" => ("User", "Index"),
-            "Super Admin" => ("User", "Index"),
+            "Super Admin" => ("User", "UserList"),
             _ => ("Account", "AccessDenied")
         };
+
+        public async Task<List<ModelUser>> GetUserListAsync ()
+        {
+            List<ModelUser> userList = new List<ModelUser>();
+            try
+            {
+                return await _context.LoginCredentials
+                                .Where(uc => uc.RoleId != 3)
+                                .Join(
+                                    _context.UserRoles,
+                                    uc => uc.RoleId,
+                                    ur => ur.RoleId,
+                                    ( uc, ur ) => new ModelUser
+                                    {
+                                        Id = (int) uc.Id,
+                                        UserId = uc.UserId,
+                                        Role = ur.Role,
+                                        Name = uc.Name,
+                                        Password = uc.Password,
+                                        Status = uc.Status
+                                    }
+                                )
+                                .OrderByDescending(vm => vm.Id)
+                                .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching user list.");
+                throw;
+            }
+        }
     }
 }

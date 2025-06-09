@@ -38,7 +38,7 @@ namespace ShipeX2.Persistence.TableModels
             public string? Password { get; set; }
 
             [Column("Status")]
-            public bool? Status { get; set; }
+            public bool Status { get; set; }
 
             [Column("RoleId")]
             public long RoleId { get; set; }
