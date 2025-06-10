@@ -44,7 +44,7 @@ namespace ShipeX2.Identity.Services
 
         public async Task<(bool IsSuccess, string ErrorMessage, ClaimsPrincipal Principal)> AuthenticateUserAsync ( string username, string password )
         {
-            var user = GetUser(username,password);
+            var user = GetUser(username, password);
             if (user.Result == null)
             {
                 return (false, "Invalid username or password", null);
@@ -148,13 +148,42 @@ namespace ShipeX2.Identity.Services
             {
                 await transaction.RollbackAsync();
                 apiResult.IsSuccessful = false;
-                apiResult.Message = $"Error inserting user: {ex.Message}";
+                apiResult.Message = $"Error inserting user: {ex.InnerException.Message}";
                 apiResult.Data = Array.Empty<string>();
             }
 
             return apiResult;
         }
 
+        public async Task<ApiResult> ActiveInactiveUser ( long userId )
+        {
+            ApiResult apiResult = new ApiResult();
+            try
+            {
+                var user = await _context.LoginCredentials.FirstOrDefaultAsync(u => u.Id == userId);
+                if (user != null)
+                {
+                    user.Status = !user.Status;
+                    int i = _context.SaveChanges();
+                    if (i > 0)
+                    {
+                        apiResult.IsSuccessful = true;
+                        apiResult.Message = user.Status ? "User activated successfully!" : "User deactivated successfully!";
+                    }
+                }
+                else
+                {
+                    apiResult.IsSuccessful = false;
+                    apiResult.Message = "User not found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                apiResult.IsSuccessful = false;
+                apiResult.Message = $"Error updating user status: {ex.Message}";
+            }
+            return apiResult;
 
+        }
     }
 }

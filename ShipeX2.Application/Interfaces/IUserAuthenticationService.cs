@@ -11,5 +11,7 @@ namespace ShipeX2.Application.Interfaces
         Task<List<ModelUser>> GetUserListAsync();
         Task<ApiResult> CreateUserAsync ( UserModelExtended userModel );
 
+        Task<ApiResult> ActiveInactiveUser (long userId);
+
     }
 }

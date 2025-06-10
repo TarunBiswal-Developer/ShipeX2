@@ -46,5 +46,14 @@ public class UserController : Controller
         return Json(result);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> ToggleUserStatus(long userId)
+    {
+        var model = await _userAuthenticationService.ActiveInactiveUser(userId);
+        return Json(model);
+    }
+
+
+
     #endregion
 }

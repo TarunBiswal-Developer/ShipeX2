@@ -68,15 +68,11 @@
                                         string statusText = item.Status.ToString();
                                         if (@statusText == "True")
                                         {
-
-                                            <a asp-action="Delete" class="deactive-btn" asp-route-id="@item.Id"
-                                               onclick="return confirm('Do you really want to change the Status?');">Deactive</a>
+                                            <a href="javascript:void(0)" class="deactive-btn toggle-status-btn" data-id="@item.Id">Deactive</a>
                                         }
-
                                         else
                                         {
-                                            <a asp-action="Delete" class="active-btn" asp-route-id="@item.Id"
-                                               onclick="return confirm('Do you really want to change the Status?');">Active</a>
+                                            <a href="javascript:void(0)" class="active-btn toggle-status-btn" data-id="@item.Id">Active</a>
 
                                         }
                                     }
@@ -97,6 +93,40 @@
 <script>
     $(document).ready(function () {
        $('#userList').DataTable();
+       $(document).on('click', '.toggle-status-btn', function (e) {
+              e.preventDefault();
+              var id = $(this).data('id');
+              Swal.fire({
+                  title: 'Are you sure?',
+                  text: "Do you want to change the User status?",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes',
+                  cancelButtonText: 'No',
+                  reverseButtons: true
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      $.ajax({
+                          url: '@Url.Action("ToggleUserStatus", "User")',
+                          type: 'POST',
+                          data: { userId: id },
+                          success: function (response) {
+                                  if (response.IsSuccessful) {
+                                  toastr.success(response.Message, 'Success');
+                                  setTimeout(() => location.reload(), 1500);
+                              } else {
+                                  toastr.error(response.Message, 'Error');
+                              }
+                          },
+                          error: function () {
+                             toastr.error('Server error occurred!', 'Error');
+                          }
+                      });
+                  }
+              });
+          });
     });
 </script>
 }
