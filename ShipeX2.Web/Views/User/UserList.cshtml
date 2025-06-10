@@ -63,10 +63,9 @@
                             </td>
                             <td>
                                 <span>
-                                    <a href="javascript:void(0)" class="edit-btn btnedituser" data-id="@item.Id">Edit</a>|
+                                    <a asp-action="EditUserDetails" class="edit-btn btnedituser" asp-route-id="@item.Id">Edit</a> |
                                     @{
-                                        string statusText = item.Status.ToString();
-                                        if (@statusText == "True")
+                                        if (item.Status == true)
                                         {
                                             <a href="javascript:void(0)" class="deactive-btn toggle-status-btn" data-id="@item.Id">Deactive</a>
                                         }

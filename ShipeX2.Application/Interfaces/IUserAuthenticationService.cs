@@ -13,5 +13,8 @@ namespace ShipeX2.Application.Interfaces
 
         Task<ApiResult> ActiveInactiveUser (long userId);
 
+        Task<ModelUser> GetIdWiseUserList ( long id );
+        Task<ApiResult> SaveUserDetails ( UserModelExtended model);
+
     }
 }

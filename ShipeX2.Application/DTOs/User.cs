@@ -112,6 +112,7 @@ namespace ShipeX2.Application.DTOs
         public string Password { get; set; }
         public int LabelPntId { get; set; }
         public int InvoicePntId { get; set; }
+        public string Id { get; set; }
     }
 
 }

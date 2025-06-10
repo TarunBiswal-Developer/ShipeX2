@@ -53,6 +53,22 @@ public class UserController : Controller
         return Json(model);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> EditUserDetails (long id)
+    {
+        ViewBag.Roles = await AppModel.RetrieveRoles(_context);
+        ViewBag.LabelPrinters = await AppModel.RetrieveLabelPrinters(_context);
+        ViewBag.InvoicePrinters = await AppModel.RetrieveInvoicePrinters(_context);
+        var model = await _userAuthenticationService.GetIdWiseUserList(id);
+        return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditUserDetails( [FromBody] UserModelExtended model)
+    {
+        var result = await _userAuthenticationService.SaveUserDetails(model);
+        return Json(result);
+    }
 
 
     #endregion

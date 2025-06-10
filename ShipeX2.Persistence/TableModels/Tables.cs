@@ -32,16 +32,16 @@ namespace ShipeX2.Persistence.TableModels
             public long Id { get; set; }
 
             [Column("UserId")]
-            public string? UserId { get; set; }
+            public required string UserId { get; set; }
 
             [Column("Password")]
             public string? Password { get; set; }
 
             [Column("Status")]
-            public bool Status { get; set; }
+            public bool? Status { get; set; }
 
             [Column("RoleId")]
-            public long RoleId { get; set; }
+            public long? RoleId { get; set; }
 
             [Column("Name")]
             public string? Name { get; set; }
@@ -103,11 +103,11 @@ namespace ShipeX2.Persistence.TableModels
         {
             [Key]
             public long ShipXUid { get; set; }
-            public long LabelPntId { get; set; }
-            public long InvoicePntId { get; set; }
-            public long Id { get; set; }
-            public long Createdby { get; set; }
-            public DateTime Createddate { get; set; }
+            public long? LabelPntId { get; set; }
+            public long? InvoicePntId { get; set; }
+            public long? Id { get; set; }
+            public long? Createdby { get; set; }
+            public DateTime? Createddate { get; set; }
             public long? Modifiedby { get; set; }
             public DateTime? Modifieddate { get; set; }
         }
