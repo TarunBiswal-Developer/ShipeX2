@@ -105,6 +105,7 @@
 @section scripts {
     <script>
         $(document).ready(function () {
+            $('#RoleId, #LabelPntId, #InvoicePntId').select2({ width: '100%' });
             $("#editUserForm").submit(function (event) {
                 event.preventDefault();
 
