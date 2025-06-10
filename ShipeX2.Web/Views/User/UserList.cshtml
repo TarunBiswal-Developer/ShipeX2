@@ -63,7 +63,7 @@
                             </td>
                             <td>
                                 <span>
-                                    <a asp-action="Edit" class="edit-btn" asp-route-id="@item.Id">Edit</a>|
+                                    <a href="javascript:void(0)" class="edit-btn btnedituser" data-id="@item.Id">Edit</a>|
                                     @{
                                         string statusText = item.Status.ToString();
                                         if (@statusText == "True")
