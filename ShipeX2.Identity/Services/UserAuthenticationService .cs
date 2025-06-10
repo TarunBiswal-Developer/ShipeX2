@@ -24,30 +24,43 @@ namespace ShipeX2.Identity.Services
             _currentUser = currentUser;
         }
 
-        private async Task<User> GetUser ( string username, string password )
+        private async Task<User?> GetUser ( string username, string password )
         {
             string isPasswordValid = await AesOperatonHelper.Encrypt(password);
             if (string.IsNullOrEmpty(isPasswordValid))
                 return null;
+
             var loginCred = _context.LoginCredentials.FirstOrDefault(u => u.UserId == username && u.Password == isPasswordValid);
+
             if (loginCred == null)
                 return null;
 
+            string statusMessage = loginCred.Status.Value ? "Active" : "Inactive";
+
             var role = await _context.UserRoles.Where(r => r.RoleId == loginCred.RoleId).Select(r => r.Role).FirstOrDefaultAsync();
-            return new User
+            var userDetails = new
             {
                 Username = loginCred.UserId,
                 Role = role,
-                UserId = loginCred.Id
+                UserId = loginCred.Id,
+                StatusMessage = statusMessage
+            };
+
+            return userDetails.StatusMessage == "Inactive" ? null : new User
+            {
+                Username = userDetails.Username,
+                Role = userDetails.Role,
+                UserId = userDetails.UserId
             };
         }
+
 
         public async Task<(bool IsSuccess, string ErrorMessage, ClaimsPrincipal Principal)> AuthenticateUserAsync ( string username, string password )
         {
             var user = GetUser(username, password);
             if (user.Result == null)
             {
-                return (false, "Invalid username or password", null);
+                return (false, "Invalid username or password | User Is Inactive", null);
             }
 
             var claims = new List<Claim>
@@ -65,9 +78,9 @@ namespace ShipeX2.Identity.Services
         public (string Controller, string Action) GetRedirectRouteByRole ( string role ) =>
         role switch
         {
-            "Admin" => ("User", "UserList"),
+            "Admin" => ("ShipmentHistory", "Index"),
             "Shipper" => ("User", "Index"),
-            "Super Admin" => ("User", "UserList"),
+            "Super Admin" => ("ShipmentHistory", "Index"),
             _ => ("Account", "AccessDenied")
         };
 
