@@ -21,6 +21,7 @@ namespace ShipeX2.Identity.Context
         public DbSet<LoginCredential> LoginCredentials { get; set; }
         public DbSet<ShipCarrier> ShipCarriers { get; set; }
         public DbSet<Printer> Printers { get; set; }
+        public DbSet<ShipXUser> ShipXUsers { get; set; }
 
     }
 }

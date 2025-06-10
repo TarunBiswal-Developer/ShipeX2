@@ -36,14 +36,33 @@
     <link href="~/css/sweetalert2.min.css" rel="stylesheet" />
     <link href="~/css/parsley.css" rel="stylesheet" />
     <link href="~/css/toastr.min.css" rel="stylesheet" />
+    <link href="~/css/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+    <link href="~/css/select2.min.css" rel="stylesheet" />
 
      @await RenderSectionAsync("css", required: true)
     <style>
         .toast-top-right {
             top: 70px !important;
         }
+       .inner-center-sec {
+            padding: 20px;
+        }
+        .custom-btn {
+            min-width: 120px;
+        }
 
-</style>
+        .select2-container--default .select2-selection--single {
+            background-color: #fff;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+            height: 40px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #444;
+            line-height: 35px;
+        }
+    </style>
 
 </head>
 
@@ -281,6 +300,7 @@
     <script src="~/js/sweetalert2.all.min.js"></script>
     <script src="~/js/parsley.min.js"></script>
     <script src="~/js/toastr.min.js"></script>
+    <script src="~/js/select2.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

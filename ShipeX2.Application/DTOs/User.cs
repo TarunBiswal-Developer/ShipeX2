@@ -104,4 +104,14 @@ namespace ShipeX2.Application.DTOs
         public List<string> PrinterList { get; set; }
 
     }
+
+    public class UserModelExtended
+    {
+        public int RoleId { get; set; }
+        public string UserId { get; set; }
+        public string Password { get; set; }
+        public int LabelPntId { get; set; }
+        public int InvoicePntId { get; set; }
+    }
+
 }

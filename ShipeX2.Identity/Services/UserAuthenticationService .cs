@@ -4,8 +4,10 @@ using Microsoft.Extensions.Logging;
 using ShipeX2.Application.DTOs;
 using ShipeX2.Application.Helpers;
 using ShipeX2.Application.Interfaces;
+using ShipeX2.Application.Wrappers;
 using ShipeX2.Identity.Context;
 using System.Security.Claims;
+using static ShipeX2.Persistence.TableModels.Tables;
 
 namespace ShipeX2.Identity.Services
 {
@@ -13,10 +15,13 @@ namespace ShipeX2.Identity.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<UserAuthenticationService> _logger;
-        public UserAuthenticationService ( ApplicationDbContext context, ILogger<UserAuthenticationService> logger )
+        private readonly CurrentUser _currentUser;
+
+        public UserAuthenticationService ( ApplicationDbContext context, ILogger<UserAuthenticationService> logger, CurrentUser currentUser )
         {
             _context = context;
             _logger = logger;
+            _currentUser = currentUser;
         }
 
         private async Task<User> GetUser ( string username, string password )
@@ -96,5 +101,60 @@ namespace ShipeX2.Identity.Services
                 throw;
             }
         }
+
+        public async Task<ApiResult> CreateUserAsync ( UserModelExtended userModel )
+        {
+            ApiResult apiResult = new ApiResult();
+            if (userModel == null)
+            {
+                apiResult.IsSuccessful = false;
+                apiResult.Message = "User model cannot be null.";
+                apiResult.Data = Array.Empty<string>();
+                return apiResult;
+            }
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var loginCredential = new LoginCredential
+                {
+                    UserId = userModel.UserId,
+                    Password = await AesOperatonHelper.Encrypt(userModel.Password),
+                    RoleId = userModel.RoleId,
+                    Name = userModel.UserId,
+                    Status = true,
+                    CreatedBy = _currentUser.GetCurrentUserId(),
+                    CreatedDate = DateTime.UtcNow
+                };
+                _context.LoginCredentials.Add(loginCredential);
+                await _context.SaveChangesAsync();
+
+                var shipXUser = new ShipXUser
+                {
+                    LabelPntId = userModel.LabelPntId,
+                    InvoicePntId = userModel.InvoicePntId,
+                    Id = loginCredential.Id,
+                    Createdby = _currentUser.GetCurrentUserId(),
+                    Createddate = DateTime.UtcNow
+                };
+                _context.ShipXUsers.Add(shipXUser);
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+                apiResult.IsSuccessful = true;
+                apiResult.Message = "User inserted successfully!";
+                apiResult.Data = loginCredential.Id;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                apiResult.IsSuccessful = false;
+                apiResult.Message = $"Error inserting user: {ex.Message}";
+                apiResult.Data = Array.Empty<string>();
+            }
+
+            return apiResult;
+        }
+
+
     }
 }

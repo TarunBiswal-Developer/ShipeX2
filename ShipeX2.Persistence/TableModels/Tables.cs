@@ -97,5 +97,20 @@ namespace ShipeX2.Persistence.TableModels
             public DateTime? Modifieddate { get; set; }
             public string CupsPrinterName { get; set; }
         }
+
+        [Table("SPX_tblShipXUser", Schema = "public")]
+        public class ShipXUser
+        {
+            [Key]
+            public long ShipXUid { get; set; }
+            public long LabelPntId { get; set; }
+            public long InvoicePntId { get; set; }
+            public long Id { get; set; }
+            public long Createdby { get; set; }
+            public DateTime Createddate { get; set; }
+            public long? Modifiedby { get; set; }
+            public DateTime? Modifieddate { get; set; }
+        }
+
     }
 }
