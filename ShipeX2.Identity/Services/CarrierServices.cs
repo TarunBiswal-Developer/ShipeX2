@@ -47,7 +47,7 @@ namespace ShipeX2.Identity.Services
             }
             catch (Exception ex)
             {
-                 _logger.LogError("Error in Carrier Controller (Index):" + ex.Message);
+                 _logger.LogError(ex, "Error in Carrier Controller (Index):");
                 throw;
             }
             return model;
@@ -88,7 +88,7 @@ namespace ShipeX2.Identity.Services
                 result.IsSuccessful = false;
                 result.Message = "Error saving carrier: " + ex.Message;
                 result.Data = Array.Empty<string>();
-                _logger.LogError("Error in CarrierServices (CreateCarrierAsync): " + ex.Message);
+                _logger.LogError(ex, "Error in CarrierServices (CreateCarrierAsync): ");
             }
 
             return result;
@@ -148,7 +148,7 @@ namespace ShipeX2.Identity.Services
             }
             catch (Exception ex)
             {
-               _logger.LogError("Error in UpdateCarrierAsync: " + ex.Message);
+               _logger.LogError(ex, "Error in UpdateCarrierAsync: ");
                 result.IsSuccessful = false;
                 result.Message = "Error updating carrier.";
             }
@@ -184,7 +184,7 @@ namespace ShipeX2.Identity.Services
             {
                 apiResult.Message = $"Error updating mode: {ex.Message}";
                 apiResult.IsSuccessful = false;
-                _logger.LogError("Error in CarrierServices (ToggleModeAsync): " + ex.Message);
+                _logger.LogError(ex,"Error in CarrierServices (ToggleModeAsync): ");
             }
             return apiResult;
         }
@@ -221,11 +221,12 @@ namespace ShipeX2.Identity.Services
             {
                 apiResult.IsSuccessful = false;
                 apiResult.Message = "An error occurred while updating the carrier status.";
-                _logger.LogError("Error in CarrierServices (ToggleCarrierStatusAsync): " + ex.Message);
+                _logger.LogError(ex, "Error in CarrierServices (ToggleCarrierStatusAsync): ");
                 throw;
             }
             return apiResult;
         }
+
 
     }
 }
