@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ShipeX2.Application.DTOs;
-using ShipeX2.Application.Interfaces;
 using static ShipeX2.Persistence.TableModels.Tables;
 
 namespace ShipeX2.Identity.Context

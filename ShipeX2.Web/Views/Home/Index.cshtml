@@ -2,7 +2,38 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@section css{
+
+}
+
+<h2>WebSocket Echo Test</h2>
+<input id="msg" type="text" placeholder="Message to send" />
+<button type="button" onclick="sendMessage()">Send</button>
+<pre id="log"></pre>
+
+
+
+@section scripts {
+<script>
+    window.onload = function () {
+        const log = document.getElementById("log");
+
+        const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+        const host = window.location.host;
+        const ws = new WebSocket(`${protocol}://${host}/ws`);
+
+        ws.onopen = () => log.textContent += "✅ Connected\n";
+        ws.onmessage = e => log.textContent += "📨 Server: " + e.data + "\n";
+        ws.onerror = e => log.textContent += "❌ Error\n";
+        ws.onclose = () => log.textContent += "❌ Connection closed\n";
+
+        window.sendMessage = function () {
+            const msg = document.getElementById("msg").value;
+            ws.send(msg);
+            log.textContent += "📤 Sent: " + msg + "\n";
+        }
+    };
+</script>
+}
+
+

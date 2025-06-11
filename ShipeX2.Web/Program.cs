@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Shipex.Web.Middlewares;
 using ShipeX2.Application.Interfaces;
 using ShipeX2.Application.Wrappers;
 using ShipeX2.Identity.Context;
@@ -62,6 +63,11 @@ builder.Services.AddScoped<CurrentUser>();
 
 
 var app = builder.Build();
+app.UseWebSockets(new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromSeconds(120),
+    AllowedOrigins = { "*" }
+});
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -69,10 +75,13 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseWebSockets();
+app.UseWebSocketHandler();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}");

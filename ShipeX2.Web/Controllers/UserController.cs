@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using ShipeX2.Application.DTOs;
 using ShipeX2.Application.Interfaces;
 using ShipeX2.Identity.Context;
-using ShipeX2.Models;
 using ShipeX2.Web.Models;
 using static ShipeX2.Identity.Context.ApplicationDbContext;
 
