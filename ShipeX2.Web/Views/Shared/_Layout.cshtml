@@ -39,11 +39,12 @@
     <link href="~/css/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
     <link href="~/css/select2.min.css" rel="stylesheet" />
 
-     @await RenderSectionAsync("css", required: true)
+    @await RenderSectionAsync("css", required: true)
     <style>
         .toast-top-right {
             top: 70px !important;
         }
+
         .custom-btn {
             min-width: 120px;
         }
@@ -55,15 +56,104 @@
             height: 40px;
         }
 
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            color: #444;
-            line-height: 35px;
-        }
-    </style>
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                color: #444;
+                line-height: 35px;
+            }
 
+        .skeleton-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f0f2f5;
+            z-index: 9999;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            overflow: auto;
+        }
+
+        @@keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .skeleton-box,
+        .skeleton-avatar,
+        .skeleton-line,
+        .skeleton-card {
+            background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 4px;
+        }
+
+        .skeleton-header {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 700px;
+            gap: 20px;
+        }
+
+        .skeleton-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+
+        .skeleton-lines {
+            flex: 1;
+        }
+
+        .skeleton-line {
+            height: 16px;
+            margin: 8px 0;
+            width: 100%;
+        }
+
+            .skeleton-line.short {
+                width: 100%;
+            }
+
+        .skeleton-card {
+            width: 100%;
+            max-width: 700px;
+            height: 120px;
+            border-radius: 8px;
+        }
+
+    </style>
 </head>
 
 <body>
+    <div id="skeleton-loader" class="skeleton-overlay">
+        <!-- Simulated header -->
+        <div class="skeleton-header">
+            <div class="skeleton-avatar"></div>
+            <div class="skeleton-lines">
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line"></div>
+            </div>
+        </div>
+
+        <!-- Simulated card rows -->
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+    </div>
+
+
+
 
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
@@ -97,14 +187,14 @@
 
                     <li class="dropdown">
                         <a href="#"><span>Shipment</span> <i class="bi bi-chevron-down"></i></a>
-                        <ul>                          
+                        <ul>
 
                             <li><a asp-area="" asp-controller="Shipment" asp-action="Label">Quick Ship</a></li>
                             <li><a asp-area="" asp-controller="Shipment" asp-action="BackOrd">BackOrder</a></li>
                             <li><a asp-area="" asp-controller="Shipment" asp-action="Manual">Manual Ship</a></li>
                             <li><a asp-area="" asp-controller="Shipment" asp-action="ManualReturn">Return Ship</a></li>
                         </ul>
-                    </li>                   
+                    </li>
 
                     <li class="dropdown">
                         <a href="#"><span>Shipment History</span> <i class="bi bi-chevron-down"></i></a>
@@ -118,7 +208,7 @@
                         <a href="#"><span>Bulk Mailer</span> <i class="bi bi-chevron-down"></i></a>
                         <ul>
                             <li> <a asp-area="" asp-controller="UploadExcel" asp-action="Index">Upload</a></li>
-                            <li><a asp-area="" asp-controller="UploadExcel" asp-action="BulkmailerHistoryDetails">History</a></li>  
+                            <li><a asp-area="" asp-controller="UploadExcel" asp-action="BulkmailerHistoryDetails">History</a></li>
                         </ul>
                     </li>
 
@@ -127,10 +217,10 @@
                         <ul>
                             <li><a asp-area="" asp-controller="DTC" asp-action="Index">DTC Manual </a></li>
                             <li><a asp-area="" asp-controller="DTC" asp-action="Dtcal">DTC Automatic </a></li>
-                            <li><a asp-area="" asp-controller="DTC" asp-action="Scd">DTC ScanDoc </a></li>                            
+                            <li><a asp-area="" asp-controller="DTC" asp-action="Scd">DTC ScanDoc </a></li>
                             <li><a asp-area="" asp-controller="DTC" asp-action="Hst">DTC History </a></li>
                             <li><a asp-area="" asp-controller="DTC" asp-action="Fund">Manage Fund </a></li>
-                            
+
                         </ul>
                     </li>
 
@@ -215,7 +305,7 @@
     <aside id="sidebar" class="sidebar">
         <ul class="sidebar-nav" id="sidebar-nav">
             <!-- End Dashboard Nav -->
-            @if (userRole == "Admin" ||userRole == "Super Admin")
+            @if (userRole == "Admin" || userRole == "Super Admin")
             {
                 <li class="nav-item">
                     <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
@@ -300,8 +390,24 @@
     <script src="~/js/select2.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
-</body>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById('skeleton-loader').style.display = 'flex';
+        });
 
+        window.addEventListener("load", function () {
+            document.getElementById('skeleton-loader').style.display = 'none';
+        });
+
+        $(document).ajaxStart(function () {
+            $("#skeleton-loader").css("display", "flex");
+        });
+
+        $(document).ajaxStop(function () {
+            $("#skeleton-loader").hide();
+        });
+    </script>
+</body>
 </html>
 
 

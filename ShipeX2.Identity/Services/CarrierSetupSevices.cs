@@ -8,19 +8,20 @@ namespace ShipeX2.Identity.Services
 {
     public class CarrierSetupSevices : ICarrierSetupServices
     {
-		private readonly ApplicationDbContext _context;
-		private readonly ILogger<CarrierSetupSevices> _logger;
-        public CarrierSetupSevices(ApplicationDbContext context, ILogger<CarrierSetupSevices> logger)
-		{
-			_context = context;
-			_logger = logger;
+        private readonly ApplicationDbContext _context;
+        private readonly ILogger<CarrierSetupSevices> _logger;
+
+        public CarrierSetupSevices ( ApplicationDbContext context, ILogger<CarrierSetupSevices> logger )
+        {
+            _context = context;
+            _logger = logger;
         }
 
         public async Task<ModelShipCarrierService> GetCarrierSetupListAsync ()
         {
             ModelShipCarrierService model = new ModelShipCarrierService();
-			try
-			{
+            try
+            {
                 model.ShipServicelist = await _context.CarrierServices
                                     .Join(_context.ShipCarriers,
                                         cs => cs.CarrierId,
@@ -64,16 +65,18 @@ namespace ShipeX2.Identity.Services
                                             Status = sc.Status,
                                             Mode = sc.Mode
                                         }).ToListAsync();
-
             }
             catch (Exception ex)
-			{
-				_logger.LogError(ex, "Error retrieving Carrier Setup List");
-                throw;
-			}
+            {
+                var contextualInfo = new
+                {
+                    Method = nameof(GetCarrierSetupListAsync),
+                    Timestamp = DateTime.UtcNow
+                };
+                _logger.LogError(ex, "Error retrieving Carrier Setup List. Context: {@ContextualInfo}", contextualInfo);
+            }
 
             return model;
         }
-
     }
 }

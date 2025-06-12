@@ -31,20 +31,35 @@ namespace ShipeX2.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCarrierApi ( [FromBody] ModelShipCarrier model )
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var result = await _carrerServices.CreateCarrierAsync(model);
             return Json(result);
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditCarrierApi(long id)
+        public async Task<IActionResult> EditCarrierApi ( long id )
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var model = await _carrerServices.GetCarrierByIdAsync(id);
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditCarrierApi([FromBody] ModelShipCarrier model)
+        public async Task<IActionResult> EditCarrierApi ( [FromBody] ModelShipCarrier model )
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var result = await _carrerServices.UpdateCarrierAsync(model);
             return Json(result);
         }
@@ -52,6 +67,11 @@ namespace ShipeX2.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ModeChange ( long id )
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var result = await _carrerServices.ToggleModeAsync(id);
             return Json(result);
         }
@@ -59,13 +79,14 @@ namespace ShipeX2.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ToggleStatus ( long id )
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var result = await _carrerServices.ToggleCarrierStatusAsync(id);
             return Json(result);
         }
-
-
-
-
 
         #endregion
     }
