@@ -1,0 +1,154 @@
+﻿@model ShipeX2.Application.DTOs.ModelShipCarrierService
+
+@{
+    ViewData ["Title"] = "CarrierSetupList";
+}
+
+@section css {
+
+}
+
+<div class="pagetitle">
+    <h1>Shipping Services</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active">Shipping Services</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+<section class="section dashboard">
+    <div class="card recent-sales overflow-auto">
+
+        <div class="filter" style="padding-right:30px;">
+            <a asp-action="Create" class="btn btn-primary custom-btn">Create New</a>
+        </div>
+
+        <div class="card-body">
+            <h5 class="card-title"> Shipping Services</h5>
+
+            <div>
+                <table class="table table-borderless" id="carriersetupTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                Ship Via Code
+                            </th>
+                            <th scope="col">
+                                Service
+                            </th>
+                            <th scope="col">
+                                FSM Service Code
+                            </th>
+                            <th scope="col">
+                                Carrier
+                            </th>
+                            <th scope="col">
+                                Packages
+                            </th>
+
+
+
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            @foreach (var Service in Model.ShipServicelist)
+                            {
+
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Service.ServiceCode)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Service.ServiceName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Service.FSMServiceCode)
+                                    </td>
+
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Service.CarrierName)
+                                    </td>
+
+                                    <td>
+
+                                        @{
+                                            string servicename = Service.ServiceName;
+                                            string packingName = Service.PackingName;
+                                            string displayText = packingName.Length > 20
+                                            ? packingName.Substring(0, 20)
+                                            : packingName;
+
+                                            string txtlength = packingName.Length > 20 ? "1" : "0";
+                                        }
+                                        @displayText
+                                        @if (txtlength == "1")
+                                        {
+                                            <a class="packagelink" onclick="packdetails('@servicename','@packingName')" style="color:red;font-weight:bold">...</a>
+                                        }
+
+                                        @* @Html.DisplayFor(modelItem => Service.PackingName)*@
+                                    </td>
+
+
+                                    <td>
+                                        <span>
+                                            <a asp-action="Edit" class="edit-btn" asp-route-id="@Service.ServiceId">Edit</a> |
+
+                                            @{
+                                                string statusText = Service.Status.ToString();
+                                                if (@statusText == "True")
+                                                {
+
+                                                    <a asp-action="Delete" class="deactive-btn" asp-route-id="@Service.ServiceId" onclick="return confirm('Are you sure you want to change the status?');">Inactive</a>
+                                                }
+
+                                                else
+                                                {
+                                                    <a asp-action="Delete" class="active-btn" asp-route-id="@Service.ServiceId" onclick="return confirm('Are you sure you want to change the status?');">Active</a>
+
+                                                }
+                                            }
+
+
+
+
+                                        </span>
+                                    </td>
+
+
+                                </tr>
+
+
+
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6">No Records Found</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+
+    </div>
+</section>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#carriersetupTable').DataTable();
+         });
+    </script>
+
+}
+

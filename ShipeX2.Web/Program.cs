@@ -5,6 +5,7 @@ using ShipeX2.Application.Interfaces;
 using ShipeX2.Application.Wrappers;
 using ShipeX2.Identity.Context;
 using ShipeX2.Identity.Services;
+using ShipeX2.Web.Controllers;
 using static ShipeX2.Identity.Context.ApplicationDbContext;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -62,6 +63,7 @@ builder.Services.AddScoped<IPrinterServices, PrinterServices>();
 builder.Services.AddScoped<CurrentUser>();
 builder.Services.AddScoped<IImporterService, ImporterServices>();
 builder.Services.AddScoped<IClientServices, ClientServices>();
+builder.Services.AddScoped<ICarrierSetupServices, CarrierSetupSevices>();
 
 
 

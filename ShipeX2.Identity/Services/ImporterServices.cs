@@ -21,8 +21,8 @@ namespace ShipeX2.Identity.Services
         {
             try
             {
-                var importers = await _context.importers
-                                 .Join(_context.clients,
+                var importers = await _context.Importers
+                                 .Join(_context.Clients,
                                      im => im.ClientId,
                                      cl => cl.ClientId,
                                      ( im, cl ) => new ImporterExtended

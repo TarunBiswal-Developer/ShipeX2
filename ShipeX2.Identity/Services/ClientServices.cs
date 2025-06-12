@@ -21,7 +21,7 @@ namespace ShipeX2.Identity.Services
         {
 			try
 			{
-                var clients = await _context.clients
+                var clients = await _context.Clients
                                 .Select(c => new ClientViewModel
                                 {
                                     ClientId = (int)c.ClientId,

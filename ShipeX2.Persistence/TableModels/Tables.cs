@@ -185,5 +185,102 @@ namespace ShipeX2.Persistence.TableModels
             public string ComInvCopy { get; set; }
             public bool IsDTC { get; set; }
         }
+
+        [Table("SPX_tblCarrierService", Schema = "public")]
+        public class CarrierService
+        {
+            [Key]
+            [Column("ServiceId")]
+            public int ServiceId { get; set; }
+
+            [Column("CarrierId")]
+            public int CarrierId { get; set; }
+
+            [Column("ServiceName")]
+            public string? ServiceName { get; set; }
+
+            [Column("CreatedBy")]
+            public string? CreatedBy { get; set; }
+
+            [Column("CreatedDate")]
+            public DateTime? CreatedDate { get; set; }
+
+            [Column("ModifiedBy")]
+            public string? ModifiedBy { get; set; }
+
+            [Column("ModifiedDate")]
+            public DateTime? ModifiedDate { get; set; }
+
+            [Column("ServiceCode")]
+            public string? ServiceCode { get; set; }
+
+            [Column("Status")]
+            public bool? Status { get; set; }
+
+            [Column("FSMServiceType")]
+            public string? FSMServiceType { get; set; }
+        }
+
+        [Table("SPX_tblCarrierPacking", Schema = "public")]
+        public class CarrierPacking
+        {
+            [Key]
+            [Column("PackingId")]
+            public int PackingId { get; set; }
+
+            [Column("CarrierId")]
+            public int CarrierId { get; set; }
+
+            [Required]
+            [Column("PackingName")]
+            public string PackingName { get; set; }
+
+            [Column("Height")]
+            public decimal Height { get; set; }
+
+            [Column("Width")]
+            public decimal Width { get; set; }
+
+            [Column("Length")]
+            public decimal Length { get; set; }
+
+            [Column("MaxWeight")]
+            public decimal MaxWeight { get; set; }
+
+            [Column("Price")]
+            public decimal Price { get; set; }
+
+            [Column("CreatedBy")]
+            public int CreatedBy { get; set; }
+
+            [Column("CreatedDate")]
+            public DateTime? CreatedDate { get; set; }
+
+            [Column("ModifiedBy")]
+            public int? ModifiedBy { get; set; }
+
+            [Column("ModifiedDate")]
+            public DateTime? ModifiedDate { get; set; }
+
+            [Column("Status")]
+            public bool Status { get; set; }
+
+            [Column("FSMPackType")]
+            public string FSMPackType { get; set; }
+        }
+
+        [Table("SPX_tblservicePack", Schema = "public")]
+        public class ServicePack
+        {
+            [Key]
+            [Column("ServicePackId")]
+            public int ServicePackId { get; set; }
+
+            [Column("ServiceId")]
+            public int ServiceId { get; set; }
+
+            [Column("PackingId")]
+            public int PackingId { get; set; }
+        }
     }
 }
