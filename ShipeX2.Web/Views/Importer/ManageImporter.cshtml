@@ -1,0 +1,118 @@
+﻿@model List<ShipeX2.Application.DTOs.ImporterModel.ImporterExtended>
+
+@{
+    ViewData ["Title"] = "Manage Importer";
+}
+
+@section css {
+}
+
+<div class="pagetitle">
+    <h1>Manage Importer</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active"> Manage Importer</li>
+        </ol>
+    </nav>
+</div>
+
+
+
+<section class="section dashboard">
+    <div class="card recent-sales overflow-auto">
+
+        <div class="filter" style="padding-right:30px;">
+            <a asp-action="Create" class="btn btn-primary custom-btn">Create New</a>
+        </div>
+
+        <div class="card-body">
+            <h5 class="card-title">Manage Importer</h5>
+            <table class="table table-borderless" id="importerTable">
+                <thead>
+                    <tr>
+                        <th>
+                            Importer
+                        </th>
+                        <th>
+                            Contact Name
+                        </th>
+                        <th>
+                            Broker
+                        </th>
+                        <th>
+                            Client
+                        </th>
+                        <th>
+                            Country
+                        </th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ImporterCompany)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ImporterName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.BrokerName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Client)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Country)
+                                </td>
+                                <td>
+                                    <span>
+                                        <a asp-action="Edit" class="edit-btn" asp-route-id="@item.ImporterId">Edit</a>|
+                                        @{
+                                            string statusText = item.Status.ToString();
+                                            if (@statusText == "True")
+                                            {
+                                                <a asp-action="Delete" class="deactive-btn" asp-route-id="@item.ImporterId"
+                                                   onclick="return confirm('Are you sure you want to change the status?');">Inactive</a>
+                                            }
+                                            else
+                                            {
+                                                <a asp-action="Delete" class="active-btn" asp-route-id="@item.ImporterId"
+                                                   onclick="return confirm('Are you sure you want to change the status?');">Active</a>
+                                            }
+                                        }
+                                    </span>
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6">No data found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</section>
+
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+             $('#importerTable').DataTable();
+        });
+    </script>
+
+}
+

@@ -16,7 +16,7 @@ namespace ShipeX2.Web.Controllers
             _carrerServices = carrier;
         }
 
-        #region Carrer API
+        #region Carrer API 
 
         [HttpGet]
         public async Task<IActionResult> CarrierApiList ()
@@ -62,6 +62,10 @@ namespace ShipeX2.Web.Controllers
             var result = await _carrerServices.ToggleCarrierStatusAsync(id);
             return Json(result);
         }
+
+
+
+
 
         #endregion
     }

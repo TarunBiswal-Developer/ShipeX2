@@ -84,10 +84,10 @@
                             <ul>
                                 <li><a asp-area="" asp-controller="Carrier" asp-action="CarrierApiList">Carrier API</a></li>
                                 <li> <a asp-area="" asp-controller="Carriersetup" asp-action="Index">Shipping Services</a></li>
-                                <li><a asp-area="" asp-controller="Client" asp-action="Index">Manage Client</a></li>
+                                <li><a asp-area="" asp-controller="Client" asp-action="ManageClients">Manage Client</a></li>
                                 @if (userRole == "Super Admin")
                                 {
-                                    <li><a asp-area="" asp-controller="Importer" asp-action="Index">Manage Importer</a></li>
+                                    <li><a asp-area="" asp-controller="Importer" asp-action="ManageImporter">Manage Importer</a></li>
                                 }
                                 <li> <a asp-area="" asp-controller="Printer" asp-action="PrinterList">Manage Printer</a></li>
                                 <li> <a asp-area="" asp-controller="User" asp-action="UserList">Manage User</a></li>

@@ -23,6 +23,7 @@ builder.Host.UseSerilog(( context, services, configuration ) =>
 // For PostgreSQL connnection string 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresDb")));
+
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
@@ -59,6 +60,10 @@ builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService
 builder.Services.AddScoped<ICarrierListServices, CarrierServices>();
 builder.Services.AddScoped<IPrinterServices, PrinterServices>();
 builder.Services.AddScoped<CurrentUser>();
+builder.Services.AddScoped<IImporterService, ImporterServices>();
+builder.Services.AddScoped<IClientServices, ClientServices>();
+
+
 
 
 

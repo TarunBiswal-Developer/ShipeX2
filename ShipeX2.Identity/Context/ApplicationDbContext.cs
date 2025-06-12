@@ -23,6 +23,8 @@ namespace ShipeX2.Identity.Context
         public DbSet<ShipCarrier> ShipCarriers { get; set; }
         public DbSet<Printer> Printers { get; set; }
         public DbSet<ShipXUser> ShipXUsers { get; set; }
+        public DbSet<Importer> importers { get; set; }
+        public DbSet<Client> clients { get; set; }
 
     }
 }

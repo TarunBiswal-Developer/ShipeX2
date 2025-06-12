@@ -1,0 +1,108 @@
+﻿@model List<ShipeX2.Application.DTOs.ClientModel.ClientViewModel>
+
+@{
+    ViewData ["Title"] = "Manage Clients";
+}
+
+@section css {
+
+}
+
+<div class="pagetitle">
+    <h1>Manage Clients</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active"> Manage Clients</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section dashboard">
+    <div class="card recent-sales overflow-auto">
+
+        <div class="filter" style="padding-right:30px;">
+            <a asp-action="Create" class="btn btn-primary custom-btn">Create New</a>
+        </div>
+
+        <div class="card-body">
+            <h5 class="card-title">Manage Client</h5>
+            <table class="table table-borderless" id="clientTable">
+                <thead>
+                    <tr>
+
+                        <th>
+                            Company Name
+                        </th>
+                        <th>
+                            Client Code
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            STD
+                        </th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CompanyName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ClientCode)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.STDCode)
+                            </td>
+                            <td>
+                                <span>
+                                    <a asp-action="Edit" class="edit-btn" asp-route-id="@item.ClientId">Edit</a>|
+                                    @{
+                                        string statusText = item.Status.ToString();
+                                        if (@statusText == "True")
+                                        {
+
+                                            <a asp-action="Delete" class="deactive-btn" asp-route-id="@item.ClientId"
+                                               onclick="return confirm('Are you sure you want to change the status?');">Inactive</a>
+                                        }
+
+                                        else
+                                        {
+                                            <a asp-action="Delete" class="active-btn" asp-route-id="@item.ClientId"
+                                               onclick="return confirm('Are you sure you want to change the status?');">Active</a>
+
+                                        }
+                                    }
+                                </span>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</section>
+
+
+
+
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+            $('#clientTable').DataTable();
+    });
+</script>
+
+}
