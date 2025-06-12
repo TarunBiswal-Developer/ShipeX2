@@ -181,7 +181,7 @@ namespace ShipeX2.Identity.Services
                     if (i > 0)
                     {
                         apiResult.IsSuccessful = true;
-                        apiResult.Message = user.Status.HasValue ? "User activated successfully!" : "User deactivated successfully!";
+                        apiResult.Message = user.Status.Value ? "User activated successfully!" : "User deactivated successfully!";
                     }
                 }
                 else
