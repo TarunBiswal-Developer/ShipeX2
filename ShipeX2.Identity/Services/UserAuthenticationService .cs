@@ -30,7 +30,7 @@ namespace ShipeX2.Identity.Services
             if (string.IsNullOrEmpty(isPasswordValid))
                 return null;
 
-            var loginCred = _context.LoginCredentials.FirstOrDefault(u => u.UserId == username && u.Password == isPasswordValid);
+            var loginCred = await _context.LoginCredentials.FirstOrDefaultAsync(u => u.UserId == username && u.Password == isPasswordValid);
 
             if (loginCred == null)
                 return null;
