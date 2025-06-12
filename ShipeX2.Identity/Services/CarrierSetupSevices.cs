@@ -65,13 +65,14 @@ namespace ShipeX2.Identity.Services
                                             Mode = sc.Mode
                                         }).ToListAsync();
 
-                return model;
             }
             catch (Exception ex)
 			{
 				_logger.LogError(ex, "Error retrieving Carrier Setup List");
                 throw;
 			}
+
+            return model;
         }
 
     }

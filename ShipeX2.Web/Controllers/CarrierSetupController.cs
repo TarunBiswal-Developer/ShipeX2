@@ -4,7 +4,7 @@ using ShipeX2.Application.Interfaces;
 
 namespace ShipeX2.Web.Controllers
 {
-    [Authorize(Roles = "Super Admin, Admin")]
+    [Authorize(Roles = "Super Admin,Admin")]
     public class CarrierSetupController : Controller
     {
         private readonly ICarrierSetupServices _carrierSetupServices;
