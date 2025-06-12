@@ -53,7 +53,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model != null)
+                        @if (Model.ShipServicelist != null)
                         {
                             @foreach (var Service in Model.ShipServicelist)
                             {
@@ -90,8 +90,6 @@
                                         {
                                             <a class="packagelink" onclick="packdetails('@servicename','@packingName')" style="color:red;font-weight:bold">...</a>
                                         }
-
-                                        @* @Html.DisplayFor(modelItem => Service.PackingName)*@
                                     </td>
 
 
@@ -113,18 +111,9 @@
 
                                                 }
                                             }
-
-
-
-
                                         </span>
                                     </td>
-
-
                                 </tr>
-
-
-
                             }
                         }
                         else
