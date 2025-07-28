@@ -7,7 +7,13 @@ namespace ShipeX2.Identity.Context
     {
         public ApplicationDbContext ( DbContextOptions<ApplicationDbContext> options ) : base(options)
         {
+            // Enable legacy timestamp behavior in Npgsql.
+            // This makes Npgsql use the old mapping of PostgreSQL 'timestamp without time zone'
+            // to DateTimeKind.Utc (instead of DateTimeKind.Unspecified as in newer versions).
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            // Disable automatic conversion of PostgreSQL 'infinity' and '-infinity' date/time values.
+            // Without this, Npgsql would map 'infinity' to DateTime.MaxValue and '-infinity' to DateTime.MinValue.
+            // Disabling it ensures stricter handling and throws an exception instead of converting.
             AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
         }
 

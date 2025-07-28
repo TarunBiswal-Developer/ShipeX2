@@ -20,7 +20,7 @@ namespace ShipeX2.Identity.Services
         public async Task<List<ImporterExtended>> GetAllImporters ()
         {
             try
-            {
+             {
                 var importers = await _context.Importers
                                  .Join(_context.Clients,
                                      im => im.ClientId,

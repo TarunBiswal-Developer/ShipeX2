@@ -35,13 +35,13 @@ builder.Services.AddAuthentication("auth_token").AddCookie("auth_token", options
         options.LogoutPath = "/Account/Logout";
         options.AccessDeniedPath = "/Account/AccessDenied";
         options.Cookie.Name = "auth_token";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
         options.SlidingExpiration = true;
     });
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = ".ShipX.Session";
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.IdleTimeout = TimeSpan.FromHours(8);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
@@ -60,7 +60,7 @@ builder.Services.AddScoped<IDynamicDbContextFactory, DynamicDbContextFactory>();
 builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
 builder.Services.AddScoped<ICarrierListServices, CarrierServices>();
 builder.Services.AddScoped<IPrinterServices, PrinterServices>();
-builder.Services.AddScoped<CurrentUser>();
+builder.Services.AddSingleton<CurrentUser>();
 builder.Services.AddScoped<IImporterService, ImporterServices>();
 builder.Services.AddScoped<IClientServices, ClientServices>();
 builder.Services.AddScoped<ICarrierSetupServices, CarrierSetupSevices>();
