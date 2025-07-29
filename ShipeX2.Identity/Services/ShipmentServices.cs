@@ -4,7 +4,6 @@ using ShipeX2.Application.Interfaces;
 using ShipeX2.Application.Wrappers;
 using ShipeX2.Identity.Context;
 using static ShipeX2.Application.DTOs.ShipCareer;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ShipeX2.Identity.Services
 {
