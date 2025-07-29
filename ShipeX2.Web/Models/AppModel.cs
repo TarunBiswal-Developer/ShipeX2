@@ -51,5 +51,20 @@ namespace ShipeX2.Web.Models
             }));
             return items;
         }
+
+        public static async Task<List<SelectListItem>> ClientListAsync ( ApplicationDbContext _context )
+        {
+            var items = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Select Client ", Value = "" }
+            };
+            var clientsList = await _context.Clients.Where(p => p.Status == true).OrderBy(o => o.Name).ToListAsync();
+            items.AddRange(clientsList.Select(p => new SelectListItem
+            {
+                Text = p.Name + " (" + p.ClientCode + ")",
+                Value =  p.ClientId.ToString()
+            }));
+            return items;
+        }
     }
 }

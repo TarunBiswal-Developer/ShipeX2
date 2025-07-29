@@ -43,6 +43,42 @@
     <link href="~/css/select2.min.css" rel="stylesheet" />
     <link href="~/css/shipex_layout.css" rel="stylesheet" />
     @await RenderSectionAsync("css", required: true)
+    <style>
+        .parsley-errors-list {
+            color: #d9534f;
+            font-size: 0.875rem;
+            list-style: none;
+            margin: 4px 0 0 0;
+            padding: 0;
+        }
+
+        .parsley-error {
+            border-color: #d9534f !important;
+            box-shadow: 0 0 0 0.2rem rgba(217, 83, 79, 0.25);
+        }
+
+        .parsley-success {
+            border-color: #5cb85c !important;
+            box-shadow: 0 0 0 0.2rem rgba(92, 184, 92, 0.25);
+        }
+        .parsley-errors-list.filled {
+            transition: opacity 0.3s ease-in-out;
+            opacity: 1;
+        }
+
+        .parsley-errors-list:not(.filled) {
+            opacity: 0;
+        }
+        input.parsley-error,
+        select.parsley-error,
+        textarea.parsley-error {
+            margin-bottom: 0.5rem;
+        }
+        .form-group,
+        .form-control {
+            min-height: 18px; 
+        }
+    </style>
 </head>
 
 <body>
@@ -99,7 +135,7 @@
                         <a href="#"><span>Shipment</span> <i class="bi bi-chevron-down"></i></a>
                         <ul>
 
-                            <li><a asp-area="" asp-controller="Shipment" asp-action="Label">Quick Ship</a></li>
+                            <li><a asp-area="" asp-controller="Shipment" asp-action="QuickShip">Quick Ship</a></li>
                             <li><a asp-area="" asp-controller="Shipment" asp-action="BackOrd">BackOrder</a></li>
                             <li><a asp-area="" asp-controller="Shipment" asp-action="Manual">Manual Ship</a></li>
                             <li><a asp-area="" asp-controller="Shipment" asp-action="ManualReturn">Return Ship</a></li>
@@ -300,6 +336,9 @@
 
         $(document).ajaxStop(function () {
             $("#skeleton-loader").hide();
+        });
+        $(document).ready(function () {
+            $('.select2').select2();
         });
     </script>
 </body>

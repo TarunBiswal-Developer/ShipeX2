@@ -1,0 +1,285 @@
+﻿
+
+@{
+    ViewData ["Title"] = "Quick Ship";
+}
+
+@section css {
+    <style>
+        .group-box {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .group-box legend {
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 0 10px;
+            background-color: #f7f7f7;
+        }
+
+        .group-box-content {
+            padding: 10px;
+        }
+
+        .legend {
+            width: auto !important;
+            margin-top: -32px;
+            background-color: white !important;
+        }
+
+        .group-box-container {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            padding: 10px 10px 13px 10px;
+            min-height: 130px;
+        }
+
+    </style>
+}
+<div class="pagetitle">
+    <h1>Quick Ship</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="nav-link text-dark" href="/">Home</a></li>
+            <li class="breadcrumb-item active">Quick Ship</li>
+        </ol>
+    </nav>
+</div>
+
+<form method="post" data-parsley-validate>
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body" style="padding-top:10px;">
+                        <div class="group-box-container">
+                            <div class="row">
+                                <div class="col-12">
+                                    <label for="ClientCode" class="control-label">Select Client</label>
+                                    <select id="ClientCode" name="ClientCode" class="form-select select2" required data-parsley-required-message="Please select a client" data-parsley-errors-container="#clientCodeError">
+                                        @if (ViewBag.ClientList != null)
+                                        {
+                                            foreach (var client in ViewBag.ClientList)
+                                            {
+                                                <option value="@client.Value">@client.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                    <div id="clientCodeError"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3" style="padding-right:0px">
+                                    <label for="CarrierId" class="control-label">Carrier</label>
+                                    <select id="CarrierId" name="CarrierId" class="form-select" required data-parsley-required-message="Please select a carrier">
+                                        <option value="">Select Carrier</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-4" style="padding-left:0px">
+                                    <label for="DefaultAccountNo" class="control-label">Default Account No</label>
+                                    <input type="text" id="DefaultAccountNo" name="DefaultAccountNo" class="form-control" readonly style="background-color:lightgray" />
+                                </div>
+
+                                <div class="col-5">
+                                    <input type="radio" name="ACtype" id="rdodefauly" onclick="radiodefault();" checked />
+                                    <label for="rdodefauly">Default</label>
+
+                                    <input type="radio" id="rdothparty" name="ACtype" onclick="radiothirdparty();" />
+                                    <label for="ThidpartyAc" class="control-label">Third Party</label>
+
+                                    <input type="text" id="DefaultcarrierAccountNo" name="DefaultcarrierAccountNo" class="form-control" readonly style="background-color:lightgray" />
+                                    <input type="text" id="ThidpartyAc" name="ThidpartyAc" class="form-control" style="display:none" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label for="ContainerId" class="control-label">Container</label>
+                                    <input type="text" id="ContainerId" name="ContainerId" class="form-control" onkeyup="Getorder()" required data-parsley-required-message="Container is required" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="LabelPrinterId" class="control-label">Label Printer</label>
+                                    <select id="LabelPrinterId" name="LabelPrinterId" class="form-select select2" required data-parsley-required-message="Please select a label printer" data-parsley-errors-container="#labelprinterError">
+                                        @if (ViewBag.LabelPrinters != null)
+                                        {
+                                            foreach (var labelPrinter in ViewBag.LabelPrinters)
+                                            {
+                                                <option value="@labelPrinter.Value">@labelPrinter.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                    <div id="labelprinterError"></div>
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="InvoicePrinterId" class="control-label">Invoice Printer</label>
+                                    <select id="InvoicePrinterId" name="InvoicePrinterId" class="form-select select2" required data-parsley-required-message="Please select an invoice printer" data-parsley-errors-container="#invoicePrinterError">
+                                        @if (ViewBag.InvoicePrinters != null)
+                                        {
+                                            foreach (var invoicePrinter in ViewBag.InvoicePrinters)
+                                            {
+                                                <option value="@invoicePrinter.Value">@invoicePrinter.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                    <div id="invoicePrinterError"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-3">
+                    <div class="card-body form-inner">
+                        <div class="group-box-container">
+                            <div class="row">
+                                <div class="col-8">
+                                    <!-- Hidden Fields -->
+                                    <input type="hidden" id="CarrierName" name="CarrierName" />
+                                    <input type="hidden" id="Createdby" name="Createdby" />
+                                    <input type="hidden" id="ContainerNo" name="ContainerNo" />
+                                    <input type="hidden" id="OrderSuffix" name="OrderSuffix" />
+
+                                    <label for="OrderNo" class="control-label">Order No</label>
+                                    <input type="text" id="OrderNo" name="OrderNo" class="form-control" required data-parsley-required-message="Order Number is required" />
+                                </div>
+
+                                <div class="col-4">
+                                    <label for="Weight" class="control-label">Weight</label>
+                                    <input type="text" id="Weight" name="Weight" class="form-control" required data-parsley-required-message="Weight is required" data-parsley-type="number" />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <!-- Hidden Fields -->
+                                    <input type="hidden" id="Invoiceno" name="Invoiceno" />
+                                    <input type="hidden" id="STD" name="STD" />
+                                    <input type="hidden" id="Mode" name="Mode" />
+                                    <input type="hidden" id="ApiKey1" name="ApiKey1" />
+                                    <input type="hidden" id="ApiKey2" name="ApiKey2" />
+
+                                    <label for="ServiceCode" class="control-label">Service</label>
+                                    <select id="ServiceCode" name="ServiceCode" class="form-select" onchange="Getpack()" required data-parsley-required-message="Please select a service">
+                                        <option value="">Select service</option>
+                                        <!-- Options via JS -->
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="PackingId" class="control-label">Packing</label>
+                                    <select id="PackingId" name="PackingId" class="form-select" required data-parsley-required-message="Please select packing">
+                                        <!-- Options via JS -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body" style="padding-top: 40px;">
+                        <div class="group-box">
+                            <legend class="legend">Shipping Address</legend>
+                            <div class="group-box-content">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="ConsigneeTo" class="control-label">Consignee To</label>
+                                        <input type="text" id="ConsigneeTo" name="ConsigneeTo" class="form-control" required data-parsley-required-message="Please enter consignee name" />
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label for="ConsigneeCompany" class="control-label">Company Name</label>
+                                        <input type="text" id="ConsigneeCompany" name="ConsigneeCompany" class="form-control" />
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label for="ConsigneePhone" class="control-label">Phone</label>
+                                                <input type="text" id="ConsigneePhone" name="ConsigneePhone" class="form-control" required data-parsley-required-message="Please enter phone number" data-parsley-type="digits" />
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="ConsigneeEmail" class="control-label">Email</label>
+                                                <input type="email" id="ConsigneeEmail" name="ConsigneeEmail" class="form-control" required data-parsley-required-message="Please enter email" data-parsley-type="email" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="ConsigneeAddress1" class="control-label">Address Line 1</label>
+                                        <input type="text" id="ConsigneeAddress1" name="ConsigneeAddress1" class="form-control" required data-parsley-required-message="Please enter address" />
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="ConsigneeAddress2" class="control-label">Address Line 2</label>
+                                        <input type="text" id="ConsigneeAddress2" name="ConsigneeAddress2" class="form-control" />
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label for="ConsigneeCity" class="control-label">City</label>
+                                                <input type="text" id="ConsigneeCity" name="ConsigneeCity" class="form-control" required data-parsley-required-message="Please enter city" />
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="ConsigneePostCode" class="control-label">Post Code</label>
+                                                <input type="text" id="ConsigneePostCode" name="ConsigneePostCode" class="form-control" required data-parsley-required-message="Please enter zip code" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label for="ConsigneeState" class="control-label">State</label>
+                                                <input type="text" id="ConsigneeState" name="ConsigneeState" class="form-control" required data-parsley-required-message="Please enter state" />
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="ConsigneeCountry" class="control-label">Country</label>
+                                                <input type="text" id="ConsigneeCountry" name="ConsigneeCountry" class="form-control" required data-parsley-required-message="Please enter country" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div> 
+                        </div>
+                    </div> 
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body form-inner">
+                        <div class="row">
+                            <div class="col-md-12">
+                                NOTE
+                                <textarea id="txt_note" name="Note" rows="2" class="form-control" placeholder="write your note here"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 text-center">
+                <button type="submit" id="btnshipment" class="btn btn-primary custom-btn" onclick="shipment()">Create Shipment</button>
+                <input type="hidden" id="hdnClientCode" name="hdnClientCode" />
+            </div>
+        </div>
+    </section>
+</form>
+
+@section Scripts {
+    <script>
+       
+    </script>
+
+}

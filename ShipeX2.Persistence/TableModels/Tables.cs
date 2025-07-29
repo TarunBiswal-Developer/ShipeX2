@@ -180,9 +180,9 @@ namespace ShipeX2.Persistence.TableModels
             public string PrinterIP { get; set; }
             public string STDCode { get; set; }
             public string ShipmentType { get; set; }
-            public string MeterNo { get; set; }
-            public string FedExMGR { get; set; }
-            public string ComInvCopy { get; set; }
+            public string? MeterNo { get; set; }
+            public bool FedExMGR { get; set; }
+            public long? ComInvCopy { get; set; }
             public bool IsDTC { get; set; }
         }
 
