@@ -26,10 +26,40 @@
         body {
             overflow-y: hidden;
         }
+
+        .bg-animated {
+            background-image: url('../assets/img/login_background.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            animation: fadeInBackground 2s ease-in-out forwards;
+            opacity: 0.1;
+        }
+
+        @@keyframes fadeInBackground {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .js-fade-bg {
+            background-image: url('../assets/img/login_background.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+
+            .js-fade-bg.fade-in-done {
+                opacity: 1;
+            }
+
     </style>
 </head>
 
-<body style="background-image: url('../assets/img/login_background.png'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; margin: 0; padding: 0; height: 100vh;">
+@* <body style="background-image: url('../assets/img/login_background.png'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; margin: 0; padding: 0; height: 100vh;"> *@
+<body class="bg-animated js-fade-bg">
     <main>
         <form asp-action="Login" asp-controller="Account" method="post" id="loginForm">
             <div class="container">
@@ -95,6 +125,12 @@
                 toastr.error('@ViewBag.Error');
             });
         </script>
+        <script>
+            window.addEventListener("load", function () {
+                document.body.classList.add("fade-in-done");
+            });
+        </script>
+
     }
 
 </body>
