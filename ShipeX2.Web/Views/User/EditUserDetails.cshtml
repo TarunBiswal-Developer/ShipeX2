@@ -28,7 +28,7 @@
 
                         <div class="mb-3">
                             <label for="RoleId">Role</label>
-                            <select id="RoleId" name="RoleId" class="form-select"
+                            <select id="RoleId" name="RoleId" class="form-select select2"
                                     required data-parsley-error-message="User role is required"
                                     data-parsley-errors-container="#role-error-container">
                                 @foreach (var role in ViewBag.Roles)
@@ -64,7 +64,7 @@
 
                         <div class="mb-3">
                             <label for="LabelPntId">Label Printer</label>
-                            <select id="LabelPntId" name="LabelPntId" class="form-select"
+                                <select id="LabelPntId" name="LabelPntId" class="form-select select2"
                                     required data-parsley-error-message="Label Printer is required"
                                     data-parsley-errors-container="#label-error-container">
                                 @foreach (var labelPrinter in ViewBag.LabelPrinters)
@@ -77,7 +77,7 @@
 
                         <div class="mb-3">
                             <label for="InvoicePntId">Invoice Printer</label>
-                            <select id="InvoicePntId" name="InvoicePntId" class="form-select"
+                                <select id="InvoicePntId" name="InvoicePntId" class="form-select select2"
                                     required data-parsley-error-message="Invoice Printer is required"
                                     data-parsley-errors-container="#invoice-error-container">
                                 @foreach (var invoicePrinter in ViewBag.InvoicePrinters)
@@ -105,7 +105,6 @@
 @section scripts {
     <script>
         $(document).ready(function () {
-            $('#RoleId, #LabelPntId, #InvoicePntId').select2({ width: '100%' });
             $("#editUserForm").submit(function (event) {
                 event.preventDefault();
 

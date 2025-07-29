@@ -1,5 +1,4 @@
-﻿using ShipeX2.Application.DTOs;
-using ShipeX2.Application.Wrappers;
+﻿using ShipeX2.Application.Wrappers;
 using static ShipeX2.Application.DTOs.ShipCareer;
 
 namespace ShipeX2.Application.Interfaces
