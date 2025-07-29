@@ -34,6 +34,7 @@ namespace ShipeX2.Identity.Context
         public DbSet<CarrierService> CarrierServices { get; set; }
         public DbSet<CarrierPacking> CarrierPackings { get; set; }
         public DbSet<ServicePack> ServicePacks { get; set; }
+        public DbSet<ClientCarrier> ClientCarriers { get; set; }
 
     }
 }

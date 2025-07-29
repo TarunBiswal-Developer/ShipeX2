@@ -89,7 +89,7 @@
                                 </div>
 
                                 <div class="col-5">
-                                    <input type="radio" name="ACtype" id="rdodefauly" onclick="radiodefault();" checked />
+                                    <input type="radio" name="ACtype" id="rdodefauly" checked onclick="radiodefault();" />
                                     <label for="rdodefauly">Default</label>
 
                                     <input type="radio" id="rdothparty" name="ACtype" onclick="radiothirdparty();" />
@@ -167,17 +167,19 @@
                                     <input type="hidden" id="ApiKey2" name="ApiKey2" />
 
                                     <label for="ServiceCode" class="control-label">Service</label>
-                                    <select id="ServiceCode" name="ServiceCode" class="form-select" onchange="Getpack()" required data-parsley-required-message="Please select a service">
+                                    <select id="ServiceCode" name="ServiceCode" class="form-select select2" required data-parsley-required-message="Please select a service" data-parsley-errors-container="#shipServiceError">
                                         <option value="">Select service</option>
                                         <!-- Options via JS -->
                                     </select>
+                                    <div Id="shipServiceError"></div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label for="PackingId" class="control-label">Packing</label>
-                                    <select id="PackingId" name="PackingId" class="form-select" required data-parsley-required-message="Please select packing">
+                                    <select id="PackingId" name="PackingId" class="form-select" required data-parsley-required-message="Please select packing" data-parsley-errors-container="#shipPackagingError">
                                         <!-- Options via JS -->
                                     </select>
+                                    <div id="shipPackagingError"></div>
                                 </div>
                             </div>
                         </div>
@@ -270,7 +272,7 @@
                 </div>
             </div>
             <div class="col-12 text-center">
-                <button type="submit" id="btnshipment" class="btn btn-primary custom-btn" onclick="shipment()">Create Shipment</button>
+                <button type="submit" id="btnshipment" class="btn btn-primary custom-btn">Create Shipment</button>
                 <input type="hidden" id="hdnClientCode" name="hdnClientCode" />
             </div>
         </div>
@@ -279,7 +281,165 @@
 
 @section Scripts {
     <script>
-       
+        $(document).ready(function () {
+            $('#ClientCode').on('change', function () {
+                const clientId = $(this).val();
+                if (clientId) {
+                    loadClientCareers(clientId, '#CarrierId');
+                }else{
+                        $('#CarrierId').empty().append('<option value="">Select Carrier</option>');
+                        $('#DefaultAccountNo').val('');
+                        $('#DefaultcarrierAccountNo').val('');
+                        $('#ThidpartyAc').val('').hide();
+                        $('#rdodefauly').prop('checked', true);
+                        $('#DefaultcarrierAccountNo').show();
+                        $('#PackingId').empty().append('<option value="">Select Packaging</option>');
+                        $('#ServiceCode').empty().append('<option value="">Select Service</option>');
+                }
+            });
+            $('#CarrierId').on('change', function () {
+                const careerId = $(this).val();
+                if (careerId) {
+                    loadDefaultAccountInfo(careerId);
+                    loadShipServices(careerId);
+                }
+            });
+            $('#ServiceCode').on('change', function () {
+                const serviceId = $(this).val();
+                if (serviceId) {
+                    loadPackaging(serviceId);
+                }
+            });
+
+        });
+
+        function loadClientCareers(clientId, targetDropdownSelector) {
+            $.ajax({
+                url: '@Url.Action("ClientsCareer", "Shipment")',
+                type: 'POST',
+                data: { clientId: clientId },
+                success: function (response) {
+                    const dropdown = $(targetDropdownSelector);
+                    dropdown.empty();
+
+                    if (response.IsSuccessful) {
+                        if (response.Data && response.Data.length > 0) {
+                            $.each(response.Data, function (i, item) {
+                                dropdown.append(`<option value="${item.CarrierId}">${item.CarrierName}</option>`);
+                                loadDefaultAccountInfo(item.CarrierId);
+                                loadShipServices(item.CarrierId);
+                            });
+                            
+                        } else {
+                            dropdown.append('<option value="">No carriers available</option>');
+                        }
+                    } else {
+                        console.warn('Carrier load failed:', response.Message || 'Unknown error');
+                        dropdown.append(`<option value="">${response.Message || 'Failed to load carriers'}</option>`);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading careers:', error);
+                    $(targetDropdownSelector).html('<option>Error loading data</option>');
+                }
+            });
+        }
+        function loadDefaultAccountInfo(carrierId) {
+            $.ajax({
+                url: '@Url.Action("RetrieveDefaultAccountInfo", "Shipment")',
+                type: 'POST',
+                data: { careerId: carrierId },
+                beforeSend: function () {
+                    $('#DefaultAccountNo').val('');
+                    $('#DefaultcarrierAccountNo').val('');
+                    $('#ThidpartyAc').val('').hide();
+                },
+                success: function (response) {
+                    if (response.IsSuccessful) {
+                        const data = response.Data;
+                        $('#DefaultAccountNo').val(data.AccountNo || '');
+                        $('#DefaultcarrierAccountNo').val(data.AccountNo || '');
+
+                    } else {
+                        console.warn('Failed to load default account info');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error retrieving default account info:', error);
+                }
+            });
+        }
+        function radiothirdparty() {
+            $('#rdothparty').prop('checked', true);
+            $('#DefaultcarrierAccountNo').hide();
+            $('#ThidpartyAc').show().prop('readonly', false).val('');
+        }
+        function radiodefault() {
+            $('#rdodefauly').prop('checked', true);
+            $('#DefaultcarrierAccountNo').show().prop('readonly', true);
+            $('#ThidpartyAc').hide().prop('readonly', true);
+        }
+        function loadShipServices(carrierId) {
+            if (!carrierId) return;
+
+            $.ajax({
+                url: '@Url.Action("RetrieveShipServicesOfClient", "Shipment")',
+                type: 'POST',
+                data: { careerId: carrierId },
+                success: function (response) {
+                    const serviceDropdown = $('#ServiceCode');
+                    serviceDropdown.empty();
+
+                    if (response.IsSuccessful && Array.isArray(response.Data)) {
+                        serviceDropdown.append('<option value="">Select Service</option>');
+                        $.each(response.Data, function (index, item) {
+                            serviceDropdown.append(`<option value="${item.ServiceCode}">${item.ServiceName}</option>`);
+                        });
+                    } else {
+                        serviceDropdown.append('<option value="">No services found</option>');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading ship services:', error);
+                    $('#ServiceId').html('<option>Error loading services</option>');
+                }
+            });
+        }
+        function loadPackaging(serviceId) {
+            const weight = parseFloat($('#Weight').val()) || 0;
+
+            $.ajax({
+                url: '@Url.Action("RetrievePackaging", "Shipment")',
+                type: 'POST',
+                data: {
+                    shipViaCode: serviceId,
+                    weight: weight
+                },
+                beforeSend: function () {
+                    $('#PackingId').html('<option>Loading...</option>');
+                },
+                success: function (response) {
+                    const dropdown = $('#PackingId');
+                    dropdown.empty();
+
+                    if (response.IsSuccessful && Array.isArray(response.Data)) {
+                        $.each(response.Data, function (index, item) {
+                            const selected = item.IsWeightInRange === 'Selected' ? 'selected' : '';
+                            dropdown.append(`<option value="${item.PackingId}" ${selected}>${item.PackingName}</option>`);
+                        });
+                    } else {
+                        dropdown.append('<option>No packaging options available</option>');
+                    }
+                    dropdown.select2();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading packaging options:', error);
+                    $('#PackingId').html('<option>Error loading data</option>');
+                }
+            });
+        }
+
+
     </script>
 
 }

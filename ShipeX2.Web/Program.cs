@@ -64,6 +64,7 @@ builder.Services.AddSingleton<CurrentUser>();
 builder.Services.AddScoped<IImporterService, ImporterServices>();
 builder.Services.AddScoped<IClientServices, ClientServices>();
 builder.Services.AddScoped<ICarrierSetupServices, CarrierSetupSevices>();
+builder.Services.AddScoped<IShipment, ShipmentServices>();
 
 
 

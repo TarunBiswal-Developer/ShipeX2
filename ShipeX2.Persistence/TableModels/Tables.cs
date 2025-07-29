@@ -282,5 +282,23 @@ namespace ShipeX2.Persistence.TableModels
             [Column("PackingId")]
             public int PackingId { get; set; }
         }
+
+        [Table("SPX_tblClientCarrier", Schema = "public")]
+        public class ClientCarrier
+        {
+            [Key]
+            [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+            public long CarrierSetupId { get; set; }
+            public long? ClientId { get; set; }
+            public long? CarrierId { get; set; }
+            [MaxLength(100)]
+            public string AccountNo { get; set; }
+            public bool? Status { get; set; }
+            public long? CreatedBy { get; set; }
+            public DateTime? CreatedDate { get; set; }
+            public long? ModifiedBy { get; set; }
+            public DateTime? ModifiedDate { get; set; }
+            public bool? DefaultAccount { get; set; }
+        }
     }
 }
