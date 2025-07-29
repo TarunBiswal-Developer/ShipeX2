@@ -28,12 +28,15 @@
 
                         <div class="mb-3">
                             <label for="RoleId">Role</label>
-                            <select id="RoleId" name="RoleId" class="form-select"
+                            <select id="RoleId" name="RoleId" class="form-select select2"
                                     required data-parsley-error-message="User role is required"
                                     data-parsley-errors-container="#role-error-container">
-                                @foreach (var role in ViewBag.Roles)
+                                @if (ViewBag.Roles != null)
                                 {
-                                    <option value="@role.Value">@role.Text</option>
+                                    foreach (var role in ViewBag.Roles)
+                                    {
+                                        <option value="@role.Value">@role.Text</option>
+                                    }
                                 }
                             </select>
                             <div id="role-error-container"></div>
@@ -62,12 +65,15 @@
                         <h5 class="card-title">Ship Station</h5>
                         <div class="mb-3">
                             <label for="LabelPntId">Label Printer</label>
-                            <select id="LabelPntId" name="LabelPntId" class="form-select"
+                            <select id="LabelPntId" name="LabelPntId" class="form-select select2"
                                     required data-parsley-error-message="Label Printer is required"
                                     data-parsley-errors-container="#label-error-container">
-                                @foreach (var labelPrinter in ViewBag.LabelPrinters)
+                                @if (ViewBag.LabelPrinters != null)
                                 {
-                                    <option value="@labelPrinter.Value">@labelPrinter.Text</option>
+                                    foreach (var labelPrinter in ViewBag.LabelPrinters)
+                                    {
+                                        <option value="@labelPrinter.Value">@labelPrinter.Text</option>
+                                    }
                                 }
                             </select>
                             <div id="label-error-container"></div>
@@ -75,12 +81,15 @@
 
                         <div class="mb-3">
                             <label for="InvoicePntId">Invoice Printer</label>
-                            <select id="InvoicePntId" name="InvoicePntId" class="form-select"
+                            <select id="InvoicePntId" name="InvoicePntId" class="form-select select2"
                                     required data-parsley-error-message="Invoice Printer is required"
                                     data-parsley-errors-container="#invoice-error-container">
-                                @foreach (var invoicePrinter in ViewBag.InvoicePrinters)
+                                @if (ViewBag.InvoicePrinters != null)
                                 {
-                                    <option value="@invoicePrinter.Value">@invoicePrinter.Text</option>
+                                    foreach (var invoicePrinter in ViewBag.InvoicePrinters)
+                                    {
+                                        <option value="@invoicePrinter.Value">@invoicePrinter.Text</option>
+                                    }
                                 }
                             </select>
                             <div id="invoice-error-container"></div>
@@ -104,7 +113,6 @@
 @section scripts {
     <script>
         $(document).ready(function () {
-            $('#RoleId, #LabelPntId, #InvoicePntId').select2({ width: '100%' });
             $("#userForm").submit(function (event) {
                  event.preventDefault();
                  var form = $(this);
