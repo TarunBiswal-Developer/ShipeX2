@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using ShipeX2.Application.Interfaces;
 using ShipeX2.Identity.Context;
 using ShipeX2.Web.Models;
+using static ShipeX2.Identity.Context.ApplicationDbContext;
+using static ShipeX2.Persistence.TableModels.Tables;
 
 namespace ShipeX2.Web.Controllers
 {
