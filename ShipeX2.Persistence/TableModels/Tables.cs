@@ -251,13 +251,13 @@ namespace ShipeX2.Persistence.TableModels
             public decimal Price { get; set; }
 
             [Column("CreatedBy")]
-            public int CreatedBy { get; set; }
+            public long CreatedBy { get; set; }
 
             [Column("CreatedDate")]
             public DateTime? CreatedDate { get; set; }
 
             [Column("ModifiedBy")]
-            public int? ModifiedBy { get; set; }
+            public long? ModifiedBy { get; set; }
 
             [Column("ModifiedDate")]
             public DateTime? ModifiedDate { get; set; }
@@ -266,7 +266,7 @@ namespace ShipeX2.Persistence.TableModels
             public bool Status { get; set; }
 
             [Column("FSMPackType")]
-            public string FSMPackType { get; set; }
+            public string? FSMPackType { get; set; }
         }
 
         [Table("SPX_tblservicePack", Schema = "public")]

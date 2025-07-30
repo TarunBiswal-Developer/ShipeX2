@@ -1,0 +1,336 @@
+﻿@{
+    ViewData["Title"] = "Create Shipping Services";
+}
+
+@section css {
+    <style>
+        .form-label {
+            font-weight: bolder;
+        }
+
+        .pack-content {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+    </style>
+}
+
+<div class="pagetitle">
+    <h1>Shipping Services</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+            </li>
+            @* <li class="breadcrumb-item active">Manage Shipping Services</li> *@
+            <li class="breadcrumb-item active">Create</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">New Service</h5>
+                    <hr />
+                    <form id="serviceForm" data-parsley-validate>
+                        <div class="row">
+                            <div class="col-md-6 col-6 mb-3 pack-content">
+                                <div class="col-md-12 mb-3">
+                                    <label for="Carrier" class="form-label">Select Carrier</label>
+                                    <select id="Carrier" name="Carrier" class="form-select" required data-parsley-required="true"
+                                            data-parsley-error-message="Please select a Carrier">
+                                        @* <option value="" disabled selected>Select Carrier</option> *@
+                                        @if (ViewBag.ShipCarrierList != null)
+                                        {
+                                            foreach (var carrier in ViewBag.ShipCarrierList)
+                                            {
+                                                <option value="@carrier.Value" disabled="@(carrier.Value == "")" selected="@(carrier.Value == "")">@carrier.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="ServiceName" class="form-label">Service Name</label>
+                                    <input type="text" id="ServiceName" name="ServiceName" class="form-control" required data-parsley-required="true"
+                                           data-parsley-error-message="Please select Service Name" />
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="ShipViaCode" class="form-label">Ship Via Code</label>
+                                        <input type="text" id="ShipViaCode" name="ShipViaCode" class="form-control" required data-parsley-required="true"
+                                               data-parsley-error-message="Please select Ship Via Code" />
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="FSMServiceCode" class="form-label">FSM Service Code</label>
+                                        <input type="text" id="FSMServiceCode" name="FSMServiceCode" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-6 mb-3">
+                                <div class="pack-content" style="min-height:280px;">
+                                    <div class="col-md-12 mb-3">
+                                        <label>Select Package</label>
+                                        <a id="btnnewpackage" style="margin-top:3px;">
+                                            <i class="bi bi-plus-circle-fill"></i>
+                                        </a>
+                                    </div>
+                                    <div id="packageListContainer" style="height:200px;overflow-y: auto;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                            <a asp-action="CarrierSetupList" class="btn btn-secondary">Back to List</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right column for New Package -->
+        <div class="col-lg-4" id="newPackageCard" style="display:none;">
+            <div class="card">
+                <div class="card-body">
+                    <div class="pack-content">
+                        <h5 class="card-title">New Package <i class="bi bi-question-circle"></i></h5>
+                        <hr />
+                        <form id="packageForm" method="post" data-parsley-validate>
+                            <input type="hidden" name="PackageId" id="PackingId" />
+                            <div class="row">
+                                <div class="col-md-8 mb-2">
+                                    <label class="form-label">Package</label>
+                                    <input type="text" class="form-control" name="Package" id="PackageName" required data-parsley-required="true"
+                                           data-parsley-error-message="Please select Package" />
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label">FSM Code</label>
+                                    <input type="text" class="form-control" id="FSMCode" name="FSMCode" />
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">MaxWeight</label>
+                                    <input type="number" class="form-control" name="MaxWeight" id="MaxWeight" required data-parsley-required="true"
+                                           data-parsley-error-message="Please select Weight" />
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">Height</label>
+                                    <input type="number" class="form-control" id="Height" name="Height" />
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">Width</label>
+                                    <input type="number" class="form-control" name="Width" id="Width" />
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">Price</label>
+                                    <input type="number" class="form-control" name="Price" id="Price" />
+                                </div>
+                            </div>
+                            <div class="text-center mt-2">
+                                <button type="submit" id="btnSubmitPackage" class="btn btn-success btn-sm">Submit</button>
+                                <button type="button" id="btnUpdatePackage" class="btn btn-success btn-sm d-none">Update</button>
+                                <button type="reset" class="btn btn-secondary btn-sm">Reset</button>
+                                <button type="button" id="btnCancel" class="btn btn-danger btn-sm">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+         $(document).ready(function () {
+             $("#btnnewpackage").click(function () {
+                $('#btnSubmitPackage').removeClass('d-none');
+                $('#btnUpdatePackage').addClass('d-none');
+                $("#newPackageCard").slideDown();
+                $('#packageForm')[0].reset();
+             });
+
+             $("#packageForm .btn-danger").click(function () {
+                 $("#newPackageCard").slideUp();
+             });
+             $("#Carrier").change(function () {
+                  CarrierChanged();
+             });
+            $("#btnCancel").on('click', function () {
+                $('#packageForm')[0].reset();
+                $("#newPackageCard").slideUp();
+            });
+            $(document.body).on('click', '#btnUpdatePackage', function (e) {
+                e.preventDefault();
+                if ($("#packageForm").parsley().validate()) {
+                   UpdatePackage();
+                }
+            });
+            $(document.body).on('click', '#btnSubmitPackage', function (e) {
+                e.preventDefault();
+                if ($("#packageForm").parsley().validate()) {
+                    CreatePackage();
+                }
+            });
+         });
+
+        function CarrierChanged() {
+            var selectedCarrierId = $("#Carrier").val();
+            if (selectedCarrierId) {
+                $.ajax({
+                    url: "@Url.Action("GetPackingList", "CarrierSetup")",
+                    type: 'GET',
+                    data: { carrierId: selectedCarrierId },
+                    success: function (response) {
+                        if (response.IsSuccessful) {
+                            let container = $('#packageListContainer');
+                            container.empty();
+                            const header = `
+                                 <div class="d-flex border-bottom fw-bold mb-2" style="font-size:12px;">
+                                    <div class="flex-grow-1">Package</div>
+                                    <div style="min-width: 130px;">Weight</div>
+                                    <div style="min-width: 60px;">Action</div>
+                                </div>
+                            `;
+                            container.append(header);
+                            response.Data.forEach(item => {
+                                const row = `
+                                    <div class="d-flex align-items-center justify-content-between" style="font-size:12px;">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="pkg_${item.PackingId}" value="${item.PackingId}" />
+                                            <label class="form-check-label" for="pkg_${item.PackingId}">
+                                                ${item.PackingName}
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <span class="me-3 text-muted">${item.MaxWeight}</span>
+                                            <a href="#" class="edit-package" data-id="${item.PackingId}">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                `;
+                                container.append(row);
+                            });
+                             container.find('.edit-package').on('click', function (e) {
+                                e.preventDefault();
+                                const id = $(this).data('id');
+                                handleEditPackage(id);
+                            });
+                        } else {
+                            $('#packageListContainer').html(`<p class="text-muted">No packages available for selected carrier.</p>`);
+                        }
+                    },
+                    error: function (err) {
+                        console.error('Server Side Error: ', err);
+                        $('#packageListContainer').html(`<p class="text-danger">Error loading packages.</p>`);
+                    }
+                });
+            }
+            else {
+                $('#packageListContainer').empty();
+            }
+        };
+        function handleEditPackage(id){
+             $("#newPackageCard").slideDown();
+             $('#btnSubmitPackage').addClass('d-none');
+             $('#btnUpdatePackage').removeClass('d-none');
+             $.ajax({
+                    url: "@Url.Action("GetCarrierPackingById", "CarrierSetup")",
+                    type: 'GET',
+                    data: { packingId: id },
+                    success: function (response) {
+                        if (response.IsSuccessful) {
+                            $("#PackageName").val(response.Data.PackingName);
+                            $("#MaxWeight").val(response.Data.MaxWeight);
+                            $("#Height").val(response.Data.Height);
+                            $("#Width").val(response.Data.Width);
+                            $("#Price").val(response.Data.Price);
+                            $("#FSMCode").val(response.Data.FSMCode);
+                            $("#PackingId").val(response.Data.PackingId);
+                        } else {
+                            toastr.error(response.Message);
+                        }
+                    },
+                    error: function (err) {
+                        toastr.error('Error getting package details.');
+                        console.error('Server Side Error: ', err);
+                    }
+                });
+        }
+        function UpdatePackage(){
+             var postData = {
+                CarrierId: $("#Carrier").val(),
+                PackingId: $("#PackingId").val(),
+                PackingName: $("#PackageName").val(),
+                FSMCode: $("#FSMCode").val(),
+                MaxWeight: $("#MaxWeight").val(),
+                Height: $("#Height").val(),
+                Width: $("#Width").val(),
+                Price: $("#Price").val(),
+            };
+            $.ajax({
+                url: "@Url.Action("UpdateCarrierPacking", "CarrierSetup")",
+                type: 'POST',
+                data: postData,
+                success: function (response) {
+                    if (response.IsSuccessful) {
+                        toastr.success(response.Message);
+                        CarrierChanged();
+                        $("#newPackageCard").slideUp();
+                        $('#packageForm')[0].reset();
+                    } else {
+                        toastr.error(response.Message);
+                    }
+                },
+                error: function (err) {
+                    console.error('Server Side Error: ', err);
+                    toastr.error('Error updating package.');
+                }
+            });
+        }
+        function CreatePackage(){
+            var postData = {
+                CarrierId: $("#Carrier").val(),
+                PackingName: $("#PackageName").val(),
+                FSMCode: $("#FSMCode").val(),
+                MaxWeight: $("#MaxWeight").val(),
+                Height: $("#Height").val(),
+                Width: $("#Width").val(),
+                Price: $("#Price").val(),
+            };
+            $.ajax({
+                url: "@Url.Action("CreateCarrierPacking", "CarrierSetup")",
+                type: 'POST',
+                data: postData,
+                success: function (response) {
+                    if (response.IsSuccessful) {
+                        toastr.success(response.Message);
+                        CarrierChanged();
+                        $("#newPackageCard").slideUp();
+                        $('#packageForm')[0].reset();
+                    } else {
+                        toastr.error(response.Message);
+                    }
+                },
+                error: function (err) {
+                    console.error('Server Side Error: ', err);
+                    toastr.error('Error Creating package.');
+                }
+            });
+        }
+      
+
+
+    </script>
+}

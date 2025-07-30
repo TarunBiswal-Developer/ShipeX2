@@ -66,5 +66,21 @@ namespace ShipeX2.Web.Models
             }));
             return items;
         }
+
+        //ship carrier list
+        public static async Task<List<SelectListItem>> ShipCarrierListAsync ( ApplicationDbContext _context )
+        {
+            var items = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Select Carrier", Value = "" }
+            };
+            var shipCarriers = await _context.ShipCarriers./*Where(p => p.Status == true).*/OrderBy(o => o.CarrierName).ToListAsync();
+            items.AddRange(shipCarriers.Select(p => new SelectListItem
+            {
+                Text = p.CarrierName,
+                Value = p.CarrierId.ToString()
+            }));
+            return items;
+        }
     }
 }

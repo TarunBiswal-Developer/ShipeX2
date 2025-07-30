@@ -122,5 +122,16 @@ namespace ShipeX2.Application.DTOs
 
 
     }
+    public class PackingViewModel
+    {
+        public int CarrierId { get; set; }
+        public int PackingId { get; set; }
+        public string PackingName { get; set; } = string.Empty;
+        public string? FSMCode { get; set; }
+        public decimal MaxWeight { get; set; }
+        public decimal? Height { get; set; }
+        public decimal? Width { get; set; }
+        public decimal? Price { get; set; }
+    }
 
 }
