@@ -21,6 +21,7 @@ namespace ShipeX2.Identity.Context
         public interface IDynamicDbContextFactory
         {
             ApplicationDbContext CreateDbContext ( string clientId );
+            ApplicationDbContext CreateDbContextOracle ( string clientId );
         }
 
         //DbSet here

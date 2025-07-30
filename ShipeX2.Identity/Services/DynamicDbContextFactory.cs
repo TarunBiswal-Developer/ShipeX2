@@ -17,7 +17,7 @@ namespace ShipeX2.Identity.Services
         public ApplicationDbContext CreateDbContext ( string clientId )
         {
             string dbName = $"{clientId}";
-            string baseConnection = _configuration.GetConnectionString("DynamicDb");
+            string baseConnection = _configuration.GetConnectionString("OracleDb");
             string finalConnection = baseConnection.Replace("{DB_NAME}", dbName);
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
             optionsBuilder.UseSqlServer(finalConnection);
@@ -26,13 +26,13 @@ namespace ShipeX2.Identity.Services
 
         public ApplicationDbContext CreateDbContextOracle ( string clientId )
         {
-            string dbService = $"{clientId}";
-            string baseConnection = _configuration.GetConnectionString("DynamicDb");
-            string finalConnection = baseConnection.Replace("{SERVICE_NAME}", dbService);
+            string baseConnection = _configuration.GetConnectionString("OracleDb");
+            string finalConnection = baseConnection.Replace("{CLIENT_ID}", clientId);
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
             optionsBuilder.UseOracle(finalConnection);
             return new ApplicationDbContext(optionsBuilder.Options);
         }
+
 
 
     }

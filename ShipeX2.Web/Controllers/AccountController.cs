@@ -62,7 +62,7 @@ namespace ShipeX2.Web.Controllers
                 await HttpContext.SignInAsync("auth_token", result.Principal, new AuthenticationProperties
                 {
                     IsPersistent = true,
-                    ExpiresUtc = DateTime.Now.AddMinutes(30)
+                    ExpiresUtc = DateTime.Now.AddHours(8)
                 });
 
                 // Set session values

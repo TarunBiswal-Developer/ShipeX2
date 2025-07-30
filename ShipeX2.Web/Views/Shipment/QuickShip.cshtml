@@ -137,7 +137,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card mt-3">
+                <div class="card">
                     <div class="card-body form-inner">
                         <div class="group-box-container">
                             <div class="row">
@@ -157,7 +157,7 @@
                                     <input type="text" id="Weight" name="Weight" class="form-control" required data-parsley-required-message="Weight is required" data-parsley-type="number" />
                                 </div>
                             </div>
-                            <div class="row mt-2">
+                            <div class="row">
                                 <div class="col-md-6">
                                     <!-- Hidden Fields -->
                                     <input type="hidden" id="Invoiceno" name="Invoiceno" />
@@ -186,9 +186,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-md-6">
                 <div class="card">
-                    <div class="card-body" style="padding-top: 40px;">
+                    <div class="card-body" style="padding-top: 40px">
                         <div class="group-box">
                             <legend class="legend">Shipping Address</legend>
                             <div class="group-box-content">
@@ -209,30 +209,30 @@
                                                 <label for="ConsigneePhone" class="control-label">Phone</label>
                                                 <input type="text" id="ConsigneePhone" name="ConsigneePhone" class="form-control" required data-parsley-required-message="Please enter phone number" data-parsley-type="digits" />
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-md-6">
                                                 <label for="ConsigneeEmail" class="control-label">Email</label>
                                                 <input type="email" id="ConsigneeEmail" name="ConsigneeEmail" class="form-control" required data-parsley-required-message="Please enter email" data-parsley-type="email" />
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-12">
+                                    <div class="col-md-12">
                                         <label for="ConsigneeAddress1" class="control-label">Address Line 1</label>
                                         <input type="text" id="ConsigneeAddress1" name="ConsigneeAddress1" class="form-control" required data-parsley-required-message="Please enter address" />
                                     </div>
 
-                                    <div class="col-12">
+                                    <div class="col-md-12">
                                         <label for="ConsigneeAddress2" class="control-label">Address Line 2</label>
                                         <input type="text" id="ConsigneeAddress2" name="ConsigneeAddress2" class="form-control" />
                                     </div>
 
                                     <div class="col-md-12">
                                         <div class="row">
-                                            <div class="col-6">
+                                            <div class="col-md-6">
                                                 <label for="ConsigneeCity" class="control-label">City</label>
                                                 <input type="text" id="ConsigneeCity" name="ConsigneeCity" class="form-control" required data-parsley-required-message="Please enter city" />
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-md-6">
                                                 <label for="ConsigneePostCode" class="control-label">Post Code</label>
                                                 <input type="text" id="ConsigneePostCode" name="ConsigneePostCode" class="form-control" required data-parsley-required-message="Please enter zip code" />
                                             </div>
@@ -241,11 +241,11 @@
 
                                     <div class="col-md-12">
                                         <div class="row">
-                                            <div class="col-6">
+                                            <div class="col-md-6">
                                                 <label for="ConsigneeState" class="control-label">State</label>
                                                 <input type="text" id="ConsigneeState" name="ConsigneeState" class="form-control" required data-parsley-required-message="Please enter state" />
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-md-6">
                                                 <label for="ConsigneeCountry" class="control-label">Country</label>
                                                 <input type="text" id="ConsigneeCountry" name="ConsigneeCountry" class="form-control" required data-parsley-required-message="Please enter country" />
                                             </div>
@@ -259,7 +259,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-12">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-body form-inner">
                         <div class="row">
@@ -308,6 +308,8 @@
                 const serviceId = $(this).val();
                 if (serviceId) {
                     loadPackaging(serviceId);
+                }else{
+                    $('#PackingId').empty().append('<option value="">Select Packing</option>');
                 }
             });
 
@@ -326,8 +328,11 @@
                         if (response.Data && response.Data.length > 0) {
                             $.each(response.Data, function (i, item) {
                                 dropdown.append(`<option value="${item.CarrierId}">${item.CarrierName}</option>`);
-                                loadDefaultAccountInfo(item.CarrierId);
-                                loadShipServices(item.CarrierId);
+                            });
+                            const firstCarrier = response.Data[0];
+                            dropdown.val(firstCarrier.CarrierId).trigger('change');
+                            loadDefaultAccountInfo(firstCarrier.CarrierId).done(function () {
+                                loadShipServices(firstCarrier.CarrierId);
                             });
                             
                         } else {
@@ -345,7 +350,7 @@
             });
         }
         function loadDefaultAccountInfo(carrierId) {
-            $.ajax({
+            return $.ajax({
                 url: '@Url.Action("RetrieveDefaultAccountInfo", "Shipment")',
                 type: 'POST',
                 data: { careerId: carrierId },
